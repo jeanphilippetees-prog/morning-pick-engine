@@ -1,0 +1,10 @@
+[project]
+name = "morning-pick-engine"
+version = "0.1.0"
+description = "Research and backtesting engine for Morning Pick's price-based rules on TSX history. Never trades."
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["network: test needs internet access (skipped unless RUN_NETWORK_TESTS=1)"]
