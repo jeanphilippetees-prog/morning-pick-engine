@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 PRICE_COLS = ["open", "high", "low", "close", "adj_close", "volume"]
 BENCHMARK = "XIC.TO"
+RETRIES = ((10, 3.0), (5, 6.0))  # (batch size, pause in seconds) per retry round
 
 # Yahoo suffix <-> exchange prefix used in our output files ("TSX:XYZ").
 SUFFIX_TO_EXCHANGE = {".TO": "TSX", ".V": "TSXV", ".CN": "CSE"}
@@ -182,6 +183,15 @@ def update_cache(symbols: list[str], start: str, end: str | None = None,
     a split, because Yahoo re-adjusts every earlier bar.
     """
     got = download(symbols, start, end)
+    # Yahoo rate-limits large runs and returns empty frames instead of an error;
+    # retry what is missing in small, slow batches.
+    for batch, pause in RETRIES:
+        missing = [s for s in symbols if s not in got]
+        if not missing:
+            break
+        log.info("retrying %d symbols in batches of %d", len(missing), batch)
+        time.sleep(pause * 5)
+        got.update(download(missing, start, end, batch=batch, pause=pause))
     failed = [s for s in symbols if s not in got]
     for sym, df in got.items():
         save_cached(sym, df if full else merge_into_cache(load_cached(sym, data_dir), df), data_dir)
