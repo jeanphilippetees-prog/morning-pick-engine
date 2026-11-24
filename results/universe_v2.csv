@@ -1,0 +1,293 @@
+yahoo,ticker,book,type,last_date,close,value_traded_20d,zero_volume_20d,clean_lookback,exchange,name
+RY.TO,TSX:RY,regular,common,2026-11-24,269.7600,897180268.4301,0.0000,True,TSX,Royal Bank of Canada
+ENB.TO,TSX:ENB,regular,common,2026-11-24,65.6700,774639316.2761,0.0000,True,TSX,Enbridge Inc.
+CNQ.TO,TSX:CNQ,regular,common,2026-11-24,64.0200,738330914.3204,0.0000,True,TSX,Canadian Natural Resources Limited
+BMO.TO,TSX:BMO,regular,common,2026-11-24,228.3900,647264448.8705,0.0000,True,TSX,Bank of Montreal
+TD.TO,TSX:TD,regular,common,2026-11-24,165.4800,636328451.9219,0.0000,True,TSX,Toronto-Dominion Bank (The)
+SU.TO,TSX:SU,regular,common,2026-11-24,91.1100,519732602.4059,0.0000,True,TSX,Suncor Energy Inc.
+BNS.TO,TSX:BNS,regular,common,2026-11-24,121.6100,425176506.5559,0.0000,True,TSX,Bank of Nova Scotia (The)
+SHOP.TO,TSX:SHOP,regular,common,2026-11-24,191.3200,370316588.0844,0.0000,True,TSX,Shopify Inc.
+MFC.TO,TSX:MFC,regular,common,2026-11-24,60.1500,341614429.8384,0.0000,True,TSX,Manulife Financial Corporation
+CM.TO,TSX:CM,regular,common,2026-11-24,150.9000,333348934.0986,0.0000,True,TSX,Canadian Imperial Bank Of Commerce
+TRP.TO,TSX:TRP,regular,common,2026-11-24,88.1700,280208549.7426,0.0000,True,TSX,TC Energy Corporation
+CVE.TO,TSX:CVE,regular,common,2026-11-24,38.4700,255635917.0347,0.0000,True,TSX,Cenovus Energy Inc.
+NA.TO,TSX:NA,regular,common,2026-11-24,201.4000,242510975.2050,0.0000,True,TSX,National Bank of Canada
+ABX.TO,TSX:ABX,regular,common,2026-11-24,48.2600,227863183.0317,0.0000,True,TSX,Barrick Mining Corporation
+AEM.TO,TSX:AEM,regular,common,2026-11-24,223.7500,227033978.7807,0.0000,True,TSX,Agnico Eagle Mines Limited
+CNR.TO,TSX:CNR,regular,common,2026-11-24,179.7100,224311565.0899,0.0000,True,TSX,Canadian National Railway Company
+SLF.TO,TSX:SLF,regular,common,2026-11-24,101.5200,221065627.8232,0.0000,True,TSX,Sun Life Financial Inc.
+CLS.TO,TSX:CLS,regular,common,2026-11-24,283.8200,219283738.9434,0.0000,True,TSX,Celestica Inc.
+BN.TO,TSX:BN,regular,common,2026-11-24,56.3800,210539945.1106,0.0000,True,TSX,Brookfield Corporation
+CSU.TO,TSX:CSU,regular,common,2026-11-24,3130.0000,205719553.1614,0.0000,True,TSX,Constellation Software Inc.
+CP.TO,TSX:CP,regular,common,2026-11-24,131.6700,200075049.8948,0.0000,True,TSX,Canadian Pacific Kansas City Limited
+FTS.TO,TSX:FTS,regular,common,2026-11-24,84.8100,181577224.0393,0.0000,True,TSX,Fortis Inc.
+PPL.TO,TSX:PPL,regular,common,2026-11-24,68.7700,175488614.1046,0.0000,True,TSX,Pembina Pipeline Corporation
+BCE.TO,TSX:BCE,regular,common,2026-11-24,31.8900,171185221.1773,0.0000,True,TSX,BCE Inc.
+IMO.TO,TSX:IMO,regular,common,2026-11-24,165.3900,169533190.9944,0.0000,True,TSX,Imperial Oil Limited
+FFH.TO,TSX:FFH,regular,common,2026-11-24,2701.9600,166398828.5348,0.0000,True,TSX,Fairfax Financial Holdings Limited
+CCO.TO,TSX:CCO,regular,common,2026-11-24,85.6450,155816650.5081,0.0000,True,TSX,Cameco Corporation
+MG.TO,TSX:MG,regular,common,2026-11-24,88.6200,150697953.4051,0.0000,True,TSX,Magna International Inc.
+T.TO,TSX:T,regular,common,2026-11-24,15.3700,150561457.5567,0.0000,True,TSX,TELUS Corporation
+WPM.TO,TSX:WPM,regular,common,2026-11-24,165.5900,139888522.4867,0.0000,True,TSX,Wheaton Precious Metals Corp.
+POW.TO,TSX:POW,regular,common,2026-11-24,94.3800,137964429.0624,0.0000,True,TSX,Power Corporation of Canada
+RCI-B.TO,TSX:RCI.B,regular,common,2026-11-24,51.6300,137023628.3117,0.0000,True,TSX,Rogers Communications Inc.
+EMA.TO,TSX:EMA,regular,common,2026-11-24,74.4900,136186633.8666,0.0000,True,TSX,Emera Incorporated
+K.TO,TSX:K,regular,common,2026-11-24,25.7000,132174030.4764,0.0000,True,TSX,Kinross Gold Corporation
+FNV.TO,TSX:FNV,regular,common,2026-11-24,338.4900,128581990.0321,0.0000,True,TSX,Franco-Nevada Corporation
+WCP.TO,TSX:WCP,regular,common,2026-11-24,15.8850,128317410.1589,0.0000,True,TSX,Whitecap Resources Inc.
+WCN.TO,TSX:WCN,regular,common,2026-11-24,263.4300,124707014.1963,0.0000,True,TSX,"Waste Connections, Inc."
+IFC.TO,TSX:IFC,regular,common,2026-11-24,284.9300,124374780.8943,0.0000,True,TSX,Intact Financial Corporation
+QBR-B.TO,TSX:QBR.B,regular,common,2026-11-24,60.6800,123513383.0809,0.0000,True,TSX,Quebecor Inc.
+TRI.TO,TSX:TRI,regular,common,2026-11-24,154.4100,121214633.5768,0.0000,True,TSX,Thomson Reuters Corporation
+TOU.TO,TSX:TOU,regular,common,2026-11-24,61.0700,119560396.4614,0.0000,True,TSX,Tourmaline Oil Corp.
+DOL.TO,TSX:DOL,regular,common,2026-11-24,224.3200,116703403.0634,0.0000,True,TSX,Dollarama Inc.
+BAM.TO,TSX:BAM,regular,common,2026-11-24,72.2700,116501008.4907,0.0000,True,TSX,Brookfield Asset Management Ltd.
+ATD.TO,TSX:ATD,regular,common,2026-11-24,85.2700,114195027.0218,0.0000,True,TSX,Alimentation Couche-Tard Inc.
+GWO.TO,TSX:GWO,regular,common,2026-11-24,94.2000,112364063.5198,0.0000,True,TSX,Great-West Lifeco Inc.
+NTR.TO,TSX:NTR,regular,common,2026-11-24,95.0100,110927617.8624,0.0000,True,TSX,Nutrien Ltd.
+TECK-B.TO,TSX:TECK.B,regular,common,2026-11-24,71.4800,103417455.4570,0.0000,True,TSX,Teck Resources Limited
+FM.TO,TSX:FM,regular,common,2026-11-24,24.9300,103219046.4122,0.0000,True,TSX,First Quantum Minerals Ltd.
+LUN.TO,TSX:LUN,regular,common,2026-11-24,22.8300,101379790.4549,0.0000,True,TSX,Lundin Mining Corporation
+WSP.TO,TSX:WSP,regular,common,2026-11-24,186.2300,100593988.0571,0.0000,True,TSX,WSP Global Inc.
+ATZ.TO,TSX:ATZ,regular,common,2026-11-24,151.8500,96876348.1860,0.0000,True,TSX,Aritzia Inc.
+H.TO,TSX:H,regular,common,2026-11-24,57.7300,90779363.5060,0.0000,True,TSX,Hydro One Limited
+QSR.TO,TSX:QSR,regular,common,2026-11-24,107.2000,89334804.5716,0.0000,True,TSX,Restaurant Brands International Inc.
+BBD-B.TO,TSX:BBD.B,regular,common,2026-11-24,286.9000,84664804.3102,0.0000,True,TSX,Bombardier Inc.
+L.TO,TSX:L,regular,common,2026-11-24,73.0200,82537533.7910,0.0000,True,TSX,Loblaw Companies Limited
+TFII.TO,TSX:TFII,regular,common,2026-11-24,125.4200,79253690.3061,0.0000,True,TSX,TFI International Inc.
+HBM.TO,TSX:HBM,regular,common,2026-11-24,24.0850,79224139.6443,0.0000,True,TSX,Hudbay Minerals Inc.
+GIB-A.TO,TSX:GIB.A,regular,common,2026-11-24,118.2400,77587592.1988,0.0000,True,TSX,CGI Inc.
+IAG.TO,TSX:IAG,regular,common,2026-11-24,215.7000,73604360.2069,0.0000,True,TSX,iA Financial Corporation Inc.
+TIH.TO,TSX:TIH,regular,common,2026-11-24,186.5800,70531463.6961,0.0000,True,TSX,Toromont Industries Ltd.
+PAAS.TO,TSX:PAAS,regular,common,2026-11-24,44.7300,68844736.3834,0.0000,True,TSX,Pan American Silver Corp.
+HUT.TO,TSX:HUT,regular,common,2026-11-24,68.7400,65852972.6278,0.0000,True,TSX,Hut 8 Corp.
+GFL.TO,TSX:GFL,regular,common,2026-11-24,60.9000,59561050.2464,0.0000,True,TSX,GFL Environmental Inc.
+LUG.TO,TSX:LUG,regular,common,2026-11-24,85.8200,59369703.8184,0.0000,True,TSX,Lundin Gold Inc.
+KEY.TO,TSX:KEY,regular,common,2026-11-24,50.1800,58779145.0346,0.0000,True,TSX,Keyera Corp.
+ATH.TO,TSX:ATH,regular,common,2026-11-24,11.4900,58155822.3034,0.0000,True,TSX,Athabasca Oil Corporation
+STN.TO,TSX:STN,regular,common,2026-11-24,124.4800,58109612.6763,0.0000,True,TSX,Stantec Inc.
+DPM.TO,TSX:DPM,regular,common,2026-11-24,41.9400,57404080.2878,0.0000,True,TSX,DPM Metals Inc.
+AGI.TO,TSX:AGI,regular,common,2026-11-24,36.5100,55657065.3911,0.0000,True,TSX,Alamos Gold Inc.
+MRU.TO,TSX:MRU,regular,common,2026-11-24,99.5200,55383124.4235,0.0000,True,TSX,Metro Inc.
+MDA.TO,TSX:MDA,regular,common,2026-11-24,38.3200,55277441.9827,0.0000,True,TSX,MDA Space Ltd.
+X.TO,TSX:X,regular,common,2026-11-24,61.4700,55182291.3741,0.0000,True,TSX,TMX Group Limited
+ALA.TO,TSX:ALA,regular,common,2026-11-24,54.3900,54811767.9562,0.0000,True,TSX,AltaGas Ltd.
+AC.TO,TSX:AC,regular,common,2026-11-24,22.0200,54533333.3150,0.0000,True,TSX,Air Canada
+CCL-B.TO,TSX:CCL.B,regular,common,2026-11-24,105.7700,53296721.9940,0.0000,True,TSX,CCL Industries Inc.
+EFN.TO,TSX:EFN,regular,common,2026-11-24,19.5350,52995238.6293,0.0000,True,TSX,Element Fleet Management Corp.
+GIL.TO,TSX:GIL,regular,common,2026-11-24,49.9500,51973754.0189,0.0000,True,TSX,Gildan Activewear Inc.
+CTC-A.TO,TSX:CTC.A,regular,common,2026-11-24,222.8500,50799397.8360,0.0000,True,TSX,"Canadian Tire Corporation, Limited"
+EQX.TO,TSX:EQX,regular,common,2026-11-24,12.5600,50647635.8179,0.0000,True,TSX,Equinox Gold Corp.
+FTT.TO,TSX:FTT,regular,common,2026-11-24,81.9000,50548454.3772,0.0000,True,TSX,Finning International Inc.
+RBA.TO,TSX:RBA,regular,common,2026-11-24,135.9100,50062350.0184,0.0000,True,TSX,"RB Global, Inc."
+CS.TO,TSX:CS,regular,common,2026-11-24,7.9500,48675712.7759,0.0000,True,TSX,Capstone Copper Corp.
+IVN.TO,TSX:IVN,regular,common,2026-11-24,6.0750,48271959.6330,0.0000,True,TSX,Ivanhoe Mines Ltd.
+CU.TO,TSX:CU,regular,common,2026-11-24,54.6000,45562572.6919,0.0000,True,TSX,Canadian Utilities Limited
+ATRL.TO,TSX:ATRL,regular,common,2026-11-24,85.9800,45208589.9603,0.0000,True,TSX,AtkinsRéalis Group Inc.
+OTEX.TO,TSX:OTEX,regular,common,2026-11-24,33.9000,44969159.5397,0.0000,True,TSX,Open Text Corporation
+BB.TO,TSX:BB,regular,common,2026-11-24,11.9300,43902013.3405,0.0000,True,TSX,BlackBerry Limited
+ELD.TO,TSX:ELD,regular,common,2026-11-24,38.0600,43276447.1796,0.0000,True,TSX,Eldorado Gold Corporation
+IMG.TO,TSX:IMG,regular,common,2026-11-24,21.7950,42635051.7092,0.0000,True,TSX,IAMGOLD Corporation
+SAP.TO,TSX:SAP,regular,common,2026-11-24,45.6100,41590305.8783,0.0000,True,TSX,Saputo Inc.
+TVE.TO,TSX:TVE,regular,common,2026-11-24,11.6800,41270280.3089,0.0000,True,TSX,Tamarack Valley Energy Ltd.
+GMIN.TO,TSX:GMIN,regular,common,2026-11-24,40.3600,40499403.0328,0.0000,True,TSX,G Mining Ventures Corp.
+U-UN.TO,TSX:U.UN,regular,unit,2026-11-24,25.5100,38850898.0424,0.0000,True,TSX,Sprott Physical Uranium Trust
+KXS.TO,TSX:KXS,regular,common,2026-11-24,231.8600,38461280.7698,0.0000,True,TSX,Kinaxis Inc.
+AG.TO,TSX:AG,regular,common,2026-11-24,15.6000,36937058.6673,0.0000,True,TSX,First Majestic Silver Corp.
+TA.TO,TSX:TA,regular,common,2026-11-24,18.1000,36857898.1750,0.0000,True,TSX,TransAlta Corporation
+WN.TO,TSX:WN,regular,common,2026-11-24,116.4150,36719426.5449,0.0000,True,TSX,George Weston Limited
+SCR.TO,TSX:SCR,regular,common,2026-11-24,35.5000,36674348.4653,0.0000,True,TSX,Strathcona Resources Ltd.
+BTO.TO,TSX:BTO,regular,common,2026-11-24,6.1800,36293965.2226,0.0000,True,TSX,B2Gold Corp.
+IGM.TO,TSX:IGM,regular,common,2026-11-24,84.5000,34369517.4754,0.0000,True,TSX,IGM Financial Inc.
+MX.TO,TSX:MX,regular,common,2026-11-24,86.5900,33414399.3203,0.0000,True,TSX,Methanex Corporation
+CAE.TO,TSX:CAE,regular,common,2026-11-24,39.3050,33378657.2647,0.0000,True,TSX,CAE Inc.
+DSG.TO,TSX:DSG,regular,common,2026-11-24,131.5500,32904219.9658,0.0000,True,TSX,Descartes Systems Group Inc. (The)
+BTE.TO,TSX:BTE,regular,common,2026-11-24,5.4450,31903136.2951,0.0000,True,TSX,Baytex Energy Corp.
+SOBO.TO,TSX:SOBO,regular,common,2026-11-24,46.4700,31477324.1605,0.0000,True,TSX,South Bow Corporation
+EDV.TO,TSX:EDV,regular,common,2026-11-24,60.2400,31072964.6872,0.0000,True,TSX,Endeavour Mining plc
+BDT.TO,TSX:BDT,regular,common,2026-11-24,73.7100,30697639.7705,0.0000,True,TSX,Bird Construction Inc.
+CPX.TO,TSX:CPX,regular,common,2026-11-24,63.9000,29889393.1449,0.0000,True,TSX,Capital Power Corporation
+AYA.TO,TSX:AYA,regular,common,2026-11-24,26.4400,29600357.4046,0.0000,True,TSX,Aya Gold & Silver Inc.
+DSV.TO,TSX:DSV,regular,common,2026-11-24,8.4900,29258041.8777,0.0000,True,TSX,Discovery Mining Ltd.
+FSV.TO,TSX:FSV,regular,common,2026-11-24,225.7200,29241399.7238,0.0000,True,TSX,FirstService Corporation
+NPI.TO,TSX:NPI,regular,common,2026-11-24,23.9500,27978236.7179,0.0000,True,TSX,Northland Power Inc.
+PEY.TO,TSX:PEY,regular,common,2026-11-24,24.1300,27660037.4958,0.0000,True,TSX,Peyto Exploration & Development Corp.
+AAV.TO,TSX:AAV,regular,common,2026-11-24,13.5000,27410788.9754,0.0000,True,TSX,Advantage Energy Ltd.
+AQN.TO,TSX:AQN,regular,common,2026-11-24,8.2450,27173215.1134,0.0000,True,TSX,Algonquin Power & Utilities Corp.
+OGC.TO,TSX:OGC,regular,common,2026-11-24,33.5500,26112893.4106,0.0000,True,TSX,OceanaGold Corporation
+CAR-UN.TO,TSX:CAR.UN,regular,unit,2026-11-24,30.4100,25956351.9467,0.0000,True,TSX,Canadian Apartment Properties Real Estate Investment Trust
+TXR.TO,TSX:TXR,regular,common,2026-11-24,62.0700,25665250.1914,0.0000,True,TSX,Torex Resources Inc.
+NXE.TO,TSX:NXE,regular,common,2026-11-24,9.6800,25562713.4627,0.0000,True,TSX,NexGen Energy Ltd.
+EFX.TO,TSX:EFX,regular,common,2026-11-24,25.6800,25038406.9326,0.0000,True,TSX,Enerflex Ltd.
+ARE.TO,TSX:ARE,regular,common,2026-11-24,53.8700,24211906.9888,0.0000,True,TSX,Aecon Group Inc.
+ERO.TO,TSX:ERO,regular,common,2026-11-24,31.0900,23719528.6477,0.0000,True,TSX,Ero Copper Corp.
+RUS.TO,TSX:RUS,regular,common,2026-11-24,71.9100,23569385.2176,0.0000,True,TSX,Russel Metals Inc.
+PXT.TO,TSX:PXT,regular,common,2026-11-24,17.8700,23171105.0572,0.0000,True,TSX,Parex Resources Inc.
+BYD.TO,TSX:BYD,regular,common,2026-11-24,106.1300,23000574.2354,0.0000,True,TSX,Boyd Group Services Inc.
+EMP-A.TO,TSX:EMP.A,regular,common,2026-11-24,53.0400,22322670.4583,0.0000,True,TSX,Empire Company Limited
+REI-UN.TO,TSX:REI.UN,regular,unit,2026-11-24,21.7050,22176187.8093,0.0000,True,TSX,RioCan Real Estate Investment Trust
+VNP.TO,TSX:VNP,regular,common,2026-11-24,29.3300,21287920.6721,0.0000,True,TSX,5N Plus Inc.
+PBH.TO,TSX:PBH,regular,common,2026-11-24,77.2900,21155383.3231,0.0000,True,TSX,Premium Brands Holdings Corporation
+KNT.TO,TSX:KNT,regular,common,2026-11-24,21.9100,20001956.6281,0.0000,True,TSX,K92 Mining Inc.
+TNZ.TO,TSX:TNZ,regular,common,2026-11-24,41.8800,19874905.9721,0.0000,True,TSX,Tenaz Energy Corp.
+HPS-A.TO,TSX:HPS.A,regular,common,2026-11-24,178.0100,19664951.7029,0.0000,True,TSX,Hammond Power Solutions Inc.
+CG.TO,TSX:CG,regular,common,2026-11-24,25.3000,19594531.1896,0.0000,True,TSX,Centerra Gold Inc.
+OVV.TO,TSX:OVV,regular,common,2026-11-24,86.1850,19427573.6087,0.0000,True,TSX,Ovintiv Inc.
+ARIS.TO,TSX:ARIS,regular,common,2026-11-24,17.7700,19193743.0865,0.0000,True,TSX,Aris Mining Corporation
+APTX.TO,TSX:APTX,regular,common,2026-11-24,40.5400,18292790.6035,0.0000,True,TSX,Apotex Health Corp.
+CIGI.TO,TSX:CIGI,regular,common,2026-11-24,132.4600,18286667.8616,0.0000,True,TSX,Colliers International Group Inc.
+AAUC.TO,TSX:AAUC,regular,common,2026-11-24,25.9700,18183883.5909,0.0000,True,TSX,Allied Gold Corporation
+SKE.TO,TSX:SKE,regular,common,2026-11-24,36.0300,17616558.0871,0.0000,True,TSX,Skeena Resources Limited
+VET.TO,TSX:VET,regular,common,2026-11-24,14.2600,17173154.9435,0.0000,True,TSX,Vermilion Energy Inc.
+BEPC.TO,TSX:BEPC,regular,common,2026-11-24,43.1900,17026787.5082,0.0000,True,TSX,Brookfield Renewable Corporation
+BEP-UN.TO,TSX:BEP.UN,regular,unit,2026-11-24,42.5200,16721760.8213,0.0000,True,TSX,Brookfield Renewable Partners L.P.
+PD.TO,TSX:PD,regular,common,2026-11-24,123.8000,16466984.7951,0.0000,True,TSX,Precision Drilling Corporation
+EXE.TO,TSX:EXE,regular,common,2026-11-24,29.5500,16158385.8818,0.0000,True,TSX,Extendicare Inc.
+LNR.TO,TSX:LNR,regular,common,2026-11-24,86.4300,16033111.8080,0.0000,True,TSX,Linamar Corporation
+DFY.TO,TSX:DFY,regular,common,2026-11-24,73.2300,16005733.0227,0.0000,True,TSX,Definity Financial Corporation
+WDO.TO,TSX:WDO,regular,common,2026-11-24,23.9800,15869279.4627,0.0000,True,TSX,Wesdome Gold Mines Ltd.
+CCA.TO,TSX:CCA,regular,common,2026-11-24,56.0200,15812261.9156,0.0000,True,TSX,Cogeco Communications Inc.
+WFG.TO,TSX:WFG,regular,common,2026-11-24,97.3500,15530981.8175,0.0000,True,TSX,West Fraser Timber Co. Ltd.
+ONEX.TO,TSX:ONEX,regular,common,2026-11-24,114.8500,15528161.5410,0.0000,True,TSX,ONEX Corporation
+GEI.TO,TSX:GEI,regular,common,2026-11-24,31.5200,15470274.3637,0.0000,True,TSX,Gibson Energy Inc.
+POU.TO,TSX:POU,regular,common,2026-11-24,30.1900,15296028.6913,0.0000,True,TSX,Paramount Resources Ltd.
+EQB.TO,TSX:EQB,regular,common,2026-11-24,121.1300,15036451.6741,0.0000,True,TSX,EQB Inc.
+SSRM.TO,TSX:SSRM,regular,common,2026-11-24,32.3900,14851810.4220,0.0000,True,TSX,SSR Mining Inc.
+OR.TO,TSX:OR,regular,common,2026-11-24,45.2900,14772024.3149,0.0000,True,TSX,OR Royalties Inc.
+DOO.TO,TSX:DOO,regular,common,2026-11-24,90.3300,14537930.0091,0.0000,True,TSX,BRP Inc.
+PSK.TO,TSX:PSK,regular,common,2026-11-24,33.5700,14438373.2084,0.0000,True,TSX,PrairieSky Royalty Ltd.
+TPZ.TO,TSX:TPZ,regular,common,2026-11-24,27.3600,14433719.4656,0.0000,True,TSX,Topaz Energy Corp.
+CJ.TO,TSX:CJ,regular,common,2026-11-24,10.5000,14432032.7953,0.0000,True,TSX,Cardinal Energy Ltd.
+EDR.TO,TSX:EDR,regular,common,2026-11-24,8.3900,14426733.1226,0.0000,True,TSX,Endeavour Silver Corp.
+EFR.TO,TSX:EFR,regular,common,2026-11-24,7.2300,13727013.8592,0.0000,True,TSX,Energy Fuels Inc.
+SJ.TO,TSX:SJ,regular,common,2026-11-24,65.2050,13628430.2034,0.0000,True,TSX,Stella-Jones Inc.
+CEU.TO,TSX:CEU,regular,common,2026-11-24,19.4700,13498649.3884,0.0000,True,TSX,CES Energy Solutions Corp.
+KEL.TO,TSX:KEL,regular,common,2026-11-24,11.6750,13225362.1399,0.0000,True,TSX,Kelt Exploration Ltd.
+GRGD.TO,TSX:GRGD,regular,common,2026-11-24,53.8100,13160365.8254,0.0000,True,TSX,Groupe Dynamite Inc.
+SDE.TO,TSX:SDE,regular,common,2026-11-24,11.8000,13144941.3151,0.0000,True,TSX,Spartan Delta Corp.
+CJT.TO,TSX:CJT,regular,common,2026-11-24,109.5300,13115461.2255,0.0000,True,TSX,Cargojet Inc.
+CSH-UN.TO,TSX:CSH.UN,regular,unit,2026-11-24,21.1850,12500519.6458,0.0000,True,TSX,Chartwell Retirement Residences
+CHP-UN.TO,TSX:CHP.UN,regular,unit,2026-11-24,15.8200,12385176.8936,0.0000,True,TSX,Choice Properties Real Estate Investment Trust
+FVI.TO,TSX:FVI,regular,common,2026-11-24,10.9000,11994378.3447,0.0000,True,TSX,Fortuna Mining Corp.
+SVM.TO,TSX:SVM,regular,common,2026-11-24,9.5500,11694799.3280,0.0000,True,TSX,Silvercorp Metals Inc.
+JWEL.TO,TSX:JWEL,regular,common,2026-11-24,45.7100,11617810.1420,0.0000,True,TSX,Jamieson Wellness Inc.
+MAU.TO,TSX:MAU,regular,common,2026-11-24,12.9800,11567582.0202,0.0000,True,TSX,Montage Gold Corp.
+BDGI.TO,TSX:BDGI,regular,common,2026-11-24,73.2900,11549373.3200,0.0000,True,TSX,Badger Infrastructure Solutions Ltd.
+FCR-UN.TO,TSX:FCR.UN,regular,unit,2026-11-24,23.4150,11302945.3783,0.0000,True,TSX,First Capital Real Estate Investment Trust
+SRU-UN.TO,TSX:SRU.UN,regular,unit,2026-11-24,27.9400,11193660.8934,0.0000,True,TSX,SmartCentres Real Estate Investment Trust
+CDE.TO,TSX:CDE,regular,common,2026-11-24,16.0700,10849391.8436,0.0000,True,TSX,"Coeur Mining, Inc."
+PMZ-UN.TO,TSX:PMZ.UN,regular,unit,2026-11-24,23.4950,10598009.2343,0.0000,True,TSX,Primaris Real Estate Investment Trust
+IPCO.TO,TSX:IPCO,regular,common,2026-11-24,34.9500,10522325.5477,0.0000,True,TSX,International Petroleum Corporation
+NFI.TO,TSX:NFI,regular,common,2026-11-24,24.0000,10480326.0089,0.0000,True,TSX,NFI Group Inc.
+BIR.TO,TSX:BIR,regular,common,2026-11-24,6.6600,10358634.1997,0.0000,True,TSX,Birchcliff Energy Ltd.
+ATS.TO,TSX:ATS,regular,common,2026-11-24,24.7600,10300426.2631,0.0000,True,TSX,ATS Corporation
+ABRA.TO,TSX:ABRA,regular,common,2026-11-24,8.6700,10204057.6963,0.0000,True,TSX,AbraSilver Resource Corp.
+BHC.TO,TSX:BHC,regular,common,2026-11-24,12.2600,10199420.3680,0.0000,True,TSX,Bausch Health Companies Inc.
+TKO.TO,TSX:TKO,regular,common,2026-11-24,7.7800,10142235.1553,0.0000,True,TSX,Trekor Metals Limited
+ALS.TO,TSX:ALS,regular,common,2026-11-24,44.4200,9995622.5216,0.0000,True,TSX,Altius Minerals Corporation
+ARTG.V,TSXV:ARTG,regular,common,2026-11-24,33.8700,9810485.5073,0.0000,True,TSXV,Artemis Gold Inc.
+SGY.TO,TSX:SGY,regular,common,2026-11-24,9.6300,9739527.6732,0.0000,True,TSX,Surge Energy Inc.
+FRU.TO,TSX:FRU,regular,common,2026-11-24,16.3200,9734292.7379,0.0000,True,TSX,Freehold Royalties Ltd.
+DIR-UN.TO,TSX:DIR.UN,regular,unit,2026-11-24,13.0600,9652960.1053,0.0000,True,TSX,Dream Industrial Real Estate Investment Trust
+PHYS.TO,TSX:PHYS,regular,common,2026-11-24,38.2400,9629811.6096,0.0000,True,TSX,Sprott Physical Gold Trust
+HR-UN.TO,TSX:HR.UN,regular,unit,2026-11-24,9.3300,9600351.3015,0.0000,True,TSX,H&R Real Estate Investment Trust
+TFPM.TO,TSX:TFPM,regular,common,2026-11-24,40.0500,9345435.5626,0.0000,True,TSX,Triple Flag Precious Metals Corp.
+SIS.TO,TSX:SIS,regular,common,2026-11-24,31.5000,9242592.9256,0.0000,True,TSX,Savaria Corporation
+SIA.TO,TSX:SIA,regular,common,2026-11-24,20.4900,8889788.8576,0.0000,True,TSX,Sienna Senior Living Inc.
+LSPD.TO,TSX:LSPD,regular,common,2026-11-24,14.2200,8793900.8010,0.0000,True,TSX,Lightspeed Commerce Inc.
+TSU.TO,TSX:TSU,regular,common,2026-11-24,29.1900,8168102.7704,0.0000,True,TSX,Trisura Group Ltd.
+CGX.TO,TSX:CGX,regular,common,2026-11-24,14.2500,8166321.9881,0.0000,True,TSX,Cineplex Inc.
+ARG.TO,TSX:ARG,regular,common,2026-11-24,6.4100,8117368.3866,0.0000,True,TSX,Amerigo Resources Ltd.
+PSLV.TO,TSX:PSLV,regular,common,2026-11-24,18.9000,8103888.1580,0.0000,True,TSX,Sprott Physical Silver Trust
+BEI-UN.TO,TSX:BEI.UN,regular,unit,2026-11-24,61.8300,7891409.3783,0.0000,True,TSX,Boardwalk Real Estate Investment Trust
+SII.TO,TSX:SII,regular,common,2026-11-24,137.6300,7855686.8168,0.0000,True,TSX,Sprott Inc.
+GFR.TO,TSX:GFR,regular,common,2026-11-24,10.9600,7560255.9789,0.0000,True,TSX,Greenfire Resources Ltd.
+PRL.TO,TSX:PRL,regular,common,2026-11-24,25.1100,7403227.2876,0.0000,True,TSX,Propel Holdings Inc.
+MFI.TO,TSX:MFI,regular,common,2026-11-24,28.2950,7237151.2093,0.0000,True,TSX,Maple Leaf Foods Inc.
+CAS.TO,TSX:CAS,regular,common,2026-11-24,15.6100,7148291.9714,0.0000,True,TSX,Cascades Inc.
+NEO.TO,TSX:NEO,regular,common,2026-11-24,21.3400,7127718.3361,0.0000,True,TSX,Neo Performance Materials Inc.
+TVK.TO,TSX:TVK,regular,common,2026-11-24,103.2150,7125605.4722,0.0000,True,TSX,TerraVest Industries Inc.
+TOT.TO,TSX:TOT,regular,common,2026-11-24,33.4400,6971300.8845,0.0000,True,TSX,Total Energy Services Inc.
+AIF.TO,TSX:AIF,regular,common,2026-11-24,50.5200,6886803.8630,0.0000,True,TSX,Altus Group Limited
+TOI.V,TSXV:TOI,regular,common,2026-11-24,95.6000,6808299.1211,0.0000,True,TSXV,Topicus.com Inc.
+MTL.TO,TSX:MTL,regular,common,2026-11-24,29.0650,6765306.5935,0.0000,True,TSX,Mullen Group Ltd.
+SPB.TO,TSX:SPB,regular,common,2026-11-24,5.1550,6567835.1286,0.0000,True,TSX,Superior Plus Corp.
+SEA.TO,TSX:SEA,regular,common,2026-11-24,26.2500,6457620.3373,0.0000,True,TSX,Seabridge Gold Inc.
+CRR-UN.TO,TSX:CRR.UN,regular,unit,2026-11-24,16.5400,6375098.7286,0.0000,True,TSX,Crombie Real Estate Investment Trust
+LIF.TO,TSX:LIF,regular,common,2026-11-24,19.8200,6211274.8971,0.0000,True,TSX,Labrador Iron Ore Royalty Corporation
+RGSI.TO,TSX:RGSI,regular,common,2026-11-24,24.1600,6188617.1080,0.0000,True,TSX,Rockpoint Gas Storage Inc.
+PET.TO,TSX:PET,regular,common,2026-11-24,22.4500,6164533.3538,0.0000,True,TSX,Pet Valu Holdings Ltd.
+NG.TO,TSX:NG,regular,common,2026-11-24,7.1800,6072878.0038,0.0000,True,TSX,NovaGold Resources Inc.
+SOIL.TO,TSX:SOIL,regular,common,2026-11-24,7.1500,6051418.9919,0.0000,True,TSX,Saturn Oil & Gas Inc.
+VLE.TO,TSX:VLE,regular,common,2026-11-24,12.7450,6014864.6832,0.0000,True,TSX,Valeura Energy Inc.
+SXGC.TO,TSX:SXGC,regular,common,2026-11-24,6.4200,5891352.8220,0.0000,True,TSX,Southern Cross Gold Consolidated Ltd.
+NWC.TO,TSX:NWC,regular,common,2026-11-24,59.4400,5860903.2911,0.0000,True,TSX,North West Company Inc. (The)
+BDI.TO,TSX:BDI,regular,common,2026-11-24,20.3800,5822946.8997,0.0000,True,TSX,Black Diamond Group Limited
+FTG.TO,TSX:FTG,regular,common,2026-11-24,30.2500,5665087.6872,0.0000,False,TSX,Firan Technology Group Corporation
+MTY.TO,TSX:MTY,regular,common,2026-11-24,34.8200,5660544.6366,0.0000,True,TSX,MTY Food Group Inc.
+GSY.TO,TSX:GSY,regular,common,2026-11-24,36.5400,5642700.8650,0.0000,True,TSX,goeasy Ltd.
+NGEX.TO,TSX:NGEX,regular,common,2026-11-24,16.0800,5450290.8425,0.0000,True,TSX,NGEx Minerals Ltd.
+ASTL.TO,TSX:ASTL,regular,common,2026-11-24,6.1600,5399292.0945,0.0000,True,TSX,Algoma Steel Group Inc.
+ENGH.TO,TSX:ENGH,regular,common,2026-11-24,17.1200,5384590.4614,0.0000,True,TSX,Enghouse Systems Limited
+KMP-UN.TO,TSX:KMP.UN,regular,unit,2026-11-24,17.4500,5370012.2383,0.0000,True,TSX,Killam Apartment Real Estate Investment Trust
+MATR.TO,TSX:MATR,regular,common,2026-11-24,17.2700,5341322.7422,0.0000,True,TSX,Mattr Corp.
+BBUC.TO,TSX:BBUC,regular,common,2026-11-24,40.3200,5072625.5200,0.0000,True,TSX,Brookfield Business Corporation
+TCW.TO,TSX:TCW,regular,common,2026-11-24,6.0300,5008675.2532,0.0000,True,TSX,Trican Well Service Ltd.
+DML.TO,TSX:DML,smallcap,common,2026-11-24,2.4650,10726493.1217,0.0000,True,TSX,Denison Mines Corp.
+KEEL.TO,TSX:KEEL,smallcap,common,2026-11-24,2.0350,10576976.5644,0.0000,True,TSX,Keel Infrastructure Corp.
+AP-UN.TO,TSX:AP.UN,smallcap,unit,2026-11-24,3.9900,9927855.1424,0.0000,True,TSX,Allied Properties Real Estate Investment Trust
+USA.TO,TSX:USA,smallcap,common,2026-11-24,2.7100,7319485.3111,0.0000,True,TSX,Americas Gold and Silver Corporation
+WELL.TO,TSX:WELL,smallcap,common,2026-11-24,3.2550,6841209.3992,0.0000,True,TSX,WELL Health Technologies Corp.
+VZLA.TO,TSX:VZLA,smallcap,common,2026-11-24,3.8200,6116006.5942,0.0000,True,TSX,Vizsla Silver Corp.
+HIVE.TO,TSX:HIVE,smallcap,common,2026-11-24,1.7700,5861891.9277,0.0000,True,TSX,HIVE Digital Technologies Ltd.
+LGD.TO,TSX:LGD,smallcap,common,2026-11-24,1.5500,5618707.0523,0.0000,True,TSX,Liberty Gold Corp.
+PNG.V,TSXV:PNG,smallcap,common,2026-11-24,2.4200,5117865.7450,0.0000,True,TSXV,Kraken Robotics Inc.
+ASM.TO,TSX:ASM,smallcap,common,2026-11-24,4.9700,4726934.2462,0.0000,True,TSX,Avino Silver & Gold Mines Ltd.
+VITL-UN.TO,TSX:VITL.UN,smallcap,unit,2026-11-24,4.6800,4654240.3227,0.0000,True,TSX,Vital Infrastructure Property Trust
+HMMC.TO,TSX:HMMC,smallcap,common,2026-11-24,3.8500,4529717.5724,0.0000,True,TSX,Hemlo Mining Corp.
+OMG.V,TSXV:OMG,smallcap,common,2026-11-24,1.2000,4415469.9856,0.0000,True,TSXV,Omai Gold Mines Corp.
+FDY.TO,TSX:FDY,smallcap,common,2026-11-24,2.9200,4328488.0910,0.0000,True,TSX,Faraday Copper Corp.
+HSLV.TO,TSX:HSLV,smallcap,common,2026-11-24,4.5600,4317734.9961,0.0000,True,TSX,Highlander Silver Corp.
+GGD.TO,TSX:GGD,smallcap,common,2026-11-24,2.8750,4257554.6530,0.0000,True,TSX,GoGold Resources Inc.
+LAC.TO,TSX:LAC,smallcap,common,2026-11-24,1.8500,3637133.8168,0.0000,True,TSX,Lithium Americas Corp.
+ORE.TO,TSX:ORE,smallcap,common,2026-11-24,2.1250,3536966.4104,0.0000,True,TSX,Orezone Gold Corporation
+XNDU.TO,TSX:XNDU,smallcap,common,2026-11-24,2.8900,3535234.5168,0.0000,True,TSX,Xanadu Quantum Technologies Limited
+DIV.TO,TSX:DIV,smallcap,common,2026-11-24,3.5200,3353348.3236,0.0000,True,TSX,Diversified Royalty Corp.
+OM.TO,TSX:OM,smallcap,common,2026-11-24,1.0550,3347148.6417,0.0000,True,TSX,Osisko Metals Incorporated
+RIO.TO,TSX:RIO,smallcap,common,2026-11-24,2.1650,3204017.3152,0.0000,True,TSX,Rio2 Limited
+TLG.TO,TSX:TLG,smallcap,common,2026-11-24,1.1650,2858532.5661,0.0000,True,TSX,Troilus Mining Corp.
+CIA.TO,TSX:CIA,smallcap,common,2026-11-24,1.5650,2787875.4992,0.0000,True,TSX,Champion Iron Limited
+BLDP.TO,TSX:BLDP,smallcap,common,2026-11-24,1.4300,2513680.4267,0.0000,True,TSX,Ballard Power Systems Inc.
+TLRY.TO,TSX:TLRY,smallcap,common,2026-11-24,2.6100,2321125.7042,0.0000,True,TSX,"Tilray Brands, Inc."
+TALA.TO,TSX:TALA,smallcap,common,2026-11-24,4.9700,2251886.0589,0.0000,True,TSX,Talamore Mining Corp.
+IAU.TO,TSX:IAU,smallcap,common,2026-11-24,1.5100,2221001.5075,0.0000,True,TSX,i-80 Gold Corp.
+TF.TO,TSX:TF,smallcap,common,2026-11-24,4.2400,2214269.4456,0.0000,True,TSX,Timbercreek Financial Corp.
+LGN.V,TSXV:LGN,smallcap,common,2026-11-24,1.5100,2190984.2986,0.0000,True,TSXV,Logan Energy Corp.
+MOON.V,TSXV:MOON,smallcap,common,2026-11-24,3.3700,1931569.9666,0.0000,True,TSXV,Blue Moon Metals Inc.
+APM.TO,TSX:APM,smallcap,common,2026-11-24,4.1500,1878621.9334,0.0000,True,TSX,Andean Precious Metals Corp.
+CVVY.TO,TSX:CVVY,smallcap,common,2026-11-24,1.6200,1769858.3771,0.0000,True,TSX,Cavvy Energy Ltd.
+JOY.TO,TSX:JOY,smallcap,common,2026-11-24,4.1700,1700715.4246,0.0000,True,TSX,Journey Energy Inc.
+ESI.TO,TSX:ESI,smallcap,common,2026-11-24,3.9100,1632853.6791,0.0000,True,TSX,Ensign Energy Services Inc.
+MAI.TO,TSX:MAI,smallcap,common,2026-11-24,2.7100,1490981.2024,0.0000,True,TSX,Mining Americas Inc.
+LAR.TO,TSX:LAR,smallcap,common,2026-11-24,4.6100,1476232.8103,0.0000,True,TSX,Lithium Argentina AG
+ELVA.TO,TSX:ELVA,smallcap,common,2026-11-24,4.7700,1464196.3385,0.0000,True,TSX,Electrovaya Inc.
+WRN.TO,TSX:WRN,smallcap,common,2026-11-24,1.7050,1450732.5778,0.0000,True,TSX,Western Copper and Gold Corporation
+FSZ.TO,TSX:FSZ,smallcap,common,2026-11-24,2.1100,1440666.2958,0.0000,True,TSX,Fiera Capital Corporation
+NICU.TO,TSX:NICU,smallcap,common,2026-11-24,1.3000,1430271.1700,0.0000,True,TSX,Magna Mining Inc.
+GAU.TO,TSX:GAU,smallcap,common,2026-11-24,2.5800,1424409.3836,0.0000,True,TSX,Galiano Gold Inc.
+MER.TO,TSX:MER,smallcap,common,2026-11-24,1.6050,1422762.4710,0.0000,True,TSX,Meren Energy Inc.
+PMET.TO,TSX:PMET,smallcap,common,2026-11-24,2.3800,1337018.4976,0.0000,True,TSX,PMET Resources Inc.
+ATX.TO,TSX:ATX,smallcap,common,2026-11-24,1.3000,1313674.4599,0.0000,True,TSX,ATEX Resources Inc.
+VGZ.TO,TSX:VGZ,smallcap,common,2026-11-24,3.2400,1297887.9343,0.0000,True,TSX,Vista Gold Corp.
+SVI.TO,TSX:SVI,smallcap,common,2026-11-24,4.0800,1291032.0771,0.0000,True,TSX,StorageVault Canada Inc.
+HSTR.TO,TSX:HSTR,smallcap,common,2026-11-24,1.8800,1275291.5784,0.0000,True,TSX,Heliostar Metals Ltd.
+III.TO,TSX:III,smallcap,common,2026-11-24,4.5100,1206877.9523,0.0000,True,TSX,Imperial Metals Corporation
+CADY.TO,TSX:CADY,smallcap,common,2026-11-24,3.3600,1198728.1912,0.0000,True,TSX,Cadillac Mines Corporation
+NCX.V,TSXV:NCX,smallcap,common,2026-11-24,2.1900,1182796.2565,0.0000,True,TSXV,NorthIsle Copper and Gold Inc.
+NFGC.TO,TSX:NFGC,smallcap,common,2026-11-24,1.7550,1169740.3384,0.0000,True,TSX,New Found Gold Corp.
+ZDC.V,TSXV:ZDC,smallcap,common,2026-11-24,4.2800,1129265.1183,0.0000,True,TSXV,Zedcor Inc.
+DND.TO,TSX:DND,smallcap,common,2026-11-24,1.0800,1064998.8256,0.0000,False,TSX,Dye & Durham Limited
+ITR.V,TSXV:ITR,smallcap,common,2026-11-24,2.0700,1046153.9694,0.0000,True,TSXV,Integra Resources Corp.
+AFM.V,TSXV:AFM,smallcap,common,2026-11-24,1.1100,1037489.1387,0.0000,True,TSXV,Alphamin Resources Corp.
+CRON.TO,TSX:CRON,smallcap,common,2026-11-24,4.6000,1031114.1328,0.0000,True,TSX,Cronos Group Inc.
+JAG.TO,TSX:JAG,smallcap,common,2026-11-24,3.2700,1000318.0222,0.0000,True,TSX,Jaguar Mining Inc.
