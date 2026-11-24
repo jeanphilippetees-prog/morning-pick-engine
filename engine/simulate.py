@@ -22,6 +22,7 @@ STOP_MULT, TARGET_MULT = 0.95, 1.08
 TRAIL_MULT = 0.94
 BREAKEVEN_TRIGGER = 1.04
 ATR_STOP, ATR_TARGET = 2.0, 3.0
+STRICT_FILL = 0.995  # small-cap sensitivity: fill only if low <= limit x 0.995
 
 VARIANTS = {
     "base": {"kind": "base", "sessions": 10},
@@ -37,9 +38,15 @@ def buy_limit(prior_close: float) -> float:
     return prior_close * LIMIT_MULT
 
 
-def fill_price(limit: float, open_: float, low: float, volume: float) -> float | None:
-    """open <= limit -> open; else low <= limit -> limit; else None (Missed)."""
+def fill_price(limit: float, open_: float, low: float, volume: float, strict: bool = False) -> float | None:
+    """open <= limit -> open; else low <= limit -> limit; else None (Missed).
+
+    strict=True (small-cap sensitivity from the spec's bias table): no fill at all
+    unless the day's low reached limit x 0.995; the fill price rule is unchanged.
+    """
     if not volume or volume <= 0:
+        return None
+    if strict and low > limit * STRICT_FILL:
         return None
     if open_ <= limit:
         return open_
@@ -63,7 +70,7 @@ def atr14(df: pd.DataFrame, n: int = 14) -> pd.Series:
     return pd.Series(out, index=df.index)
 
 
-def run(o, h, l, c, v, flagged, cumdiv, i, limit, variant="base", atr=None, cost=0.0):
+def run(o, h, l, c, v, flagged, cumdiv, i, limit, variant="base", atr=None, cost=0.0, strict=False):
     """Core loop on plain sequences. i = index of the fill day (session 1).
 
     cumdiv[k] = total dividends with ex-date on or before bar k.
@@ -76,7 +83,7 @@ def run(o, h, l, c, v, flagged, cumdiv, i, limit, variant="base", atr=None, cost
             "skipped": 0, "dividends": 0.0, "gross": math.nan, "net": math.nan}
     if flagged[i]:
         return {**miss, "reason": "Missed (flagged)"}
-    fill = fill_price(limit, o[i], l[i], v[i])
+    fill = fill_price(limit, o[i], l[i], v[i], strict)
     if fill is None:
         return {**miss, "reason": "Missed"}
 
@@ -146,12 +153,13 @@ def cumulative_dividends(index: pd.DatetimeIndex, dividends: pd.Series | None) -
 
 
 def simulate_trade(df: pd.DataFrame, limit: float, variant: str = "base", atr: float | None = None,
-                   cost: float = 0.0, dividends: pd.Series | None = None, flagged=None) -> dict:
+                   cost: float = 0.0, dividends: pd.Series | None = None, flagged=None,
+                   strict: bool = False) -> dict:
     """One trade on a frame whose first row is the fill day (session 1)."""
     n = len(df)
     flagged = np.zeros(n, bool) if flagged is None else np.asarray(flagged, bool)
     res = run(df["open"].tolist(), df["high"].tolist(), df["low"].tolist(), df["close"].tolist(),
               df["volume"].tolist() if "volume" in df else [1] * n, flagged.tolist(),
-              cumulative_dividends(df.index, dividends).tolist(), 0, limit, variant, atr, cost)
+              cumulative_dividends(df.index, dividends).tolist(), 0, limit, variant, atr, cost, strict)
     res["exit_date"] = df.index[res["exit_index"]]
     return res
