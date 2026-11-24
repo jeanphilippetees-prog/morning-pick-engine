@@ -57,6 +57,17 @@ LOOKBACK = 60
 
 
 @dataclass(frozen=True)
+class Market:
+    """Where a market's cleaned data lives and which benchmark it is measured against."""
+    name: str
+    clean: object          # Path to the cleaned data (prices/, actions/, flags.parquet, eligibility.parquet)
+    benchmark: str         # Yahoo symbol: XIC.TO (Canada) or SPY (US)
+
+
+CA = Market("ca", CLEAN, data.BENCHMARK)
+
+
+@dataclass(frozen=True)
 class Settings:
     version: str
     blocking: frozenset          # flag names; "level_shift_unconfirmed" = level shifts not verified
@@ -109,14 +120,14 @@ def price_score_setup(threshold: int, use_filter: bool) -> Setup:
 
 # --- 1 and 2: candidates and outcomes -----------------------------------------
 
-def _load_clean(sym: str) -> tuple[pd.DataFrame, pd.DataFrame]:
-    return (pd.read_parquet(CLEAN / "prices" / f"{sym}.parquet"),
-            pd.read_parquet(CLEAN / "actions" / f"{sym}.parquet"))
+def _load_clean(sym: str, market: Market = CA) -> tuple[pd.DataFrame, pd.DataFrame]:
+    return (pd.read_parquet(market.clean / "prices" / f"{sym}.parquet"),
+            pd.read_parquet(market.clean / "actions" / f"{sym}.parquet"))
 
 
-def blocked_dates(settings: Settings) -> dict[str, set]:
+def blocked_dates(settings: Settings, market: Market = CA) -> dict[str, set]:
     """Per ticker, the dates whose flag blocks signals and is skipped inside a trade."""
-    flags = pd.read_parquet(CLEAN / "flags.parquet")
+    flags = pd.read_parquet(market.clean / "flags.parquet")
     names = set(settings.blocking)
     keep = flags["flag"].isin(names)
     if "level_shift_unconfirmed" in names:
@@ -129,15 +140,20 @@ def blocked_dates(settings: Settings) -> dict[str, set]:
     return flags[keep].groupby("yahoo")["date"].apply(set).to_dict()
 
 
-def outcomes_path(settings: Settings):
-    return CLEAN / f"outcomes_{settings.version}.parquet"
+def outcomes_path(settings: Settings, market: Market = CA):
+    return market.clean / f"outcomes_{settings.version}.parquet"
 
 
-def build_outcomes(settings: Settings) -> pd.DataFrame:
-    elig = pd.read_parquet(CLEAN / "eligibility.parquet",
+def build_outcomes(settings: Settings, market: Market = CA, row_filter=None) -> pd.DataFrame:
+    """row_filter(sym, df, factors) -> (keep, sampled) boolean arrays, or None to keep every row.
+
+    sampled marks rows in a uniform random sample of the universe; the random baseline
+    draws only from sampled rows (see run_configs). Without a filter every row is sampled.
+    """
+    elig = pd.read_parquet(market.clean / "eligibility.parquet",
                            columns=["yahoo", "date", "book", "gate_ok", "value_traded_20d"])
-    blocking = blocked_dates(settings)
-    xic, _ = _load_clean(data.BENCHMARK)
+    blocking = blocked_dates(settings, market)
+    xic, _ = _load_clean(market.benchmark, market)
     cal = xic.index
     next_session = pd.Series(cal[1:], index=cal[:-1])
     mfilter = factors.market_filter(xic)
@@ -146,12 +162,16 @@ def build_outcomes(settings: Settings) -> pd.DataFrame:
     syms = elig.loc[elig["gate_ok"], "yahoo"].unique()
     elig_by_sym = {s: g.set_index("date") for s, g in elig[elig["yahoo"].isin(syms)].groupby("yahoo")}
     for n, sym in enumerate(syms):
-        df, acts = _load_clean(sym)
+        df, acts = _load_clean(sym, market)
         f = factors.compute(df)
         e = elig_by_sym[sym].reindex(df.index)
         flagged_s = pd.Series(df.index.isin(list(blocking.get(sym, ()))), index=df.index)
         clean = flagged_s.astype(int).rolling(LOOKBACK, min_periods=1).sum() == 0
         ok = e["gate_ok"].fillna(False).astype(bool) & clean & f["scoreable"]
+        sampled = np.ones(len(df), bool)
+        if row_filter is not None:
+            keep, sampled = row_filter(sym, df, f)
+            ok = ok & keep
         if not ok.any():
             continue
         flagged = flagged_s.tolist()
@@ -172,7 +192,7 @@ def build_outcomes(settings: Settings) -> pd.DataFrame:
                     "fits_stop": int(f["fits_stop"].iat[p]), "value_traded_20d": float(e.at[s, "value_traded_20d"]),
                     "limit": sim.buy_limit(c[p]), "market_ok": bool(mfilter.get(s, False)),
                     "ret_1d": float(f["ret_1d"].iat[p]), "vol_ratio": float(f["vol_ratio"].iat[p]),
-                    "gap_1d": float(gap[p]), "ret_20d_prior": float(prior20[p])}
+                    "gap_1d": float(gap[p]), "ret_20d_prior": float(prior20[p]), "sampled": bool(sampled[p])}
             has_bar = p + 1 < len(df) and df.index[p + 1] == t
             for strict in ((False, True) if universe == "smallcap" else (False,)):
                 for var in VARIANTS:
@@ -182,7 +202,7 @@ def build_outcomes(settings: Settings) -> pd.DataFrame:
                              "gross": math.nan, "net": math.nan}
                     else:
                         r = sim.run(o, h, l, c, v, flagged, cumdiv, p + 1, base["limit"], var,
-                                    float(f["atr14"].iat[p]), sim.COST[universe], strict)
+                                    float(f["atr14"].iat[p]), sim.COST.get(universe, 0.0), strict)
                         r["exit_date"] = df.index[r.pop("exit_index")]
                     rows.append({**base, "strict": strict, "variant": var, **r})
         if rows:
@@ -194,7 +214,7 @@ def build_outcomes(settings: Settings) -> pd.DataFrame:
     for col in ("yahoo", "universe", "variant", "reason"):
         out[col] = out[col].astype("category")
     out["type"] = out["yahoo"].map(data.security_type).astype("category")
-    out.to_parquet(outcomes_path(settings))
+    out.to_parquet(outcomes_path(settings, market))
     return out
 
 
@@ -208,20 +228,20 @@ def _compact(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def load_outcomes(settings: Settings, rebuild: bool = False) -> pd.DataFrame:
-    path = outcomes_path(settings)
+def load_outcomes(settings: Settings, rebuild: bool = False, market: Market = CA) -> pd.DataFrame:
+    path = outcomes_path(settings, market)
     if path.exists() and not rebuild:
         return pd.read_parquet(path)
-    return build_outcomes(settings)
+    return build_outcomes(settings, market)
 
 
 # --- 3: books -------------------------------------------------------------------
 
-def mark_closes(syms, cal, blocking: dict[str, set]) -> dict[str, pd.Series]:
-    """Clean closes on the XIC calendar, forward-filled over flagged or missing bars."""
+def mark_closes(syms, cal, blocking: dict[str, set], market: Market = CA) -> dict[str, pd.Series]:
+    """Clean closes on the benchmark calendar, forward-filled over flagged or missing bars."""
     out = {}
     for sym in syms:
-        df, _ = _load_clean(sym)
+        df, _ = _load_clean(sym, market)
         c = df["close"].copy()
         c[c.index.isin(list(blocking.get(sym, ())))] = np.nan
         out[sym] = c.reindex(cal.union(c.index)).ffill().reindex(cal)
@@ -314,6 +334,8 @@ def random_baseline(pool: pd.DataFrame, orders: pd.Series, rng: np.random.Genera
     years = sorted({t.year for t in orders.index})
     acc = {y: np.zeros((5, RANDOM_RUNS)) for y in years}
     for t, n in orders.items():
+        if t not in by_day:
+            continue  # no candidates in the (sampled) pool that day
         nets, limits = by_day[t]
         if caps is not None:
             nets = nets[limits <= caps.get(t, np.inf)]
@@ -375,7 +397,8 @@ def metrics(trades: pd.DataFrame, equity: pd.Series, xic_adj: pd.Series, period:
         out.update(win_rate=(net > 0).mean(), avg_win=wins.mean() if len(wins) else math.nan,
                    avg_loss=losses.mean() if len(losses) else math.nan, expectancy=net.mean(),
                    profit_factor=wins.sum() / -losses.sum() if losses.sum() < 0 else math.inf,
-                   avg_hold=tr["sessions"].mean(), skipped_trades=int((tr["skipped"] > 0).sum()))
+                   avg_hold=tr["sessions"].mean(), skipped_trades=int((tr["skipped"] > 0).sum()),
+                   expectancy_se=net.std(ddof=1) / math.sqrt(n) if n > 1 else math.nan)
         for reason in ("Stop", "Gap stop", "Target", "Gap target", "Time stop"):
             out[f"exit_{reason}"] = (tr["reason"] == reason).mean()
         days = pd.Series(False, index=eq.index)
@@ -384,7 +407,8 @@ def metrics(trades: pd.DataFrame, equity: pd.Series, xic_adj: pd.Series, period:
         out["pct_days_invested"] = days.mean()
     else:
         out.update(win_rate=math.nan, avg_win=math.nan, avg_loss=math.nan, expectancy=math.nan,
-                   profit_factor=math.nan, avg_hold=math.nan, skipped_trades=0, pct_days_invested=0.0)
+                   profit_factor=math.nan, avg_hold=math.nan, skipped_trades=0, pct_days_invested=0.0,
+                   expectancy_se=math.nan)
     out["max_drawdown"] = (eq / eq.cummax() - 1).min() if len(eq) else math.nan
     out["cagr"] = _cagr(eq)
     out["xic_cagr"] = _cagr(xa)
@@ -423,23 +447,25 @@ def yearly_rows(cfg, tr, eq, rand, xic_adj) -> pd.DataFrame:
 
 # --- run everything -------------------------------------------------------------
 
-def run_configs(cands: pd.DataFrame, books, setups, settings: Settings = V2, log_name: str = ""):
+def run_configs(cands: pd.DataFrame, books, setups, settings: Settings = V2, log_name: str = "",
+                market: Market = CA):
     """Run every book x setup x exit. Returns (results, trades, yearly)."""
-    xic, _ = _load_clean(data.BENCHMARK)
+    xic, _ = _load_clean(market.benchmark, market)
     first_signal = cands["t"].min()
     cal = xic.index[xic.index >= first_signal]
-    blocking = blocked_dates(settings)
-    marks = mark_closes(cands.loc[cands["filled"], "yahoo"].unique(), cal, blocking)
+    blocking = blocked_dates(settings, market)
+    marks = mark_closes(cands.loc[cands["filled"], "yahoo"].unique(), cal, blocking, market)
     rng = np.random.default_rng(SEED)
     results, all_trades, yearly = [], [], []
     for book in books:
         for var in VARIANTS:
             pool = book_pool(cands, book, var)
+            rpool = pool[pool["sampled"]] if "sampled" in pool else pool   # random draws: sampled rows only
             for setup in setups:
                 tr, orders, eq, info = run_book(book, pool, setup, cal, marks, settings)
                 caps = info["caps"] if (book.sizing == "cash" and settings.main_rule == "v2") else None
-                rand = random_baseline(pool, orders, rng, caps) if len(orders) else random_baseline(
-                    pool.iloc[:0], orders, rng)
+                rand = random_baseline(rpool, orders, rng, caps) if len(orders) else random_baseline(
+                    rpool.iloc[:0], orders, rng)
                 cfg = {"book": book.name, "setup": setup.name, **setup.labels, "variant": var}
                 for period in ("IS", "OOS"):
                     m = metrics(tr, eq, xic["adj_close"], period, first_signal)

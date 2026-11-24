@@ -16,7 +16,9 @@ import math
 import numpy as np
 import pandas as pd
 
-COST = {"regular": 0.003, "smallcap": 0.01}
+COST = {"regular": 0.003, "smallcap": 0.01,
+        # phase 2c US scenarios: US-dollar account vs a CAD account paying conversion both ways
+        "us_low": 0.001, "us_high": 0.02}
 LIMIT_MULT = 1.005
 STOP_MULT, TARGET_MULT = 0.95, 1.08
 TRAIL_MULT = 0.94

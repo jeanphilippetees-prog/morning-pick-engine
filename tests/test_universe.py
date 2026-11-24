@@ -90,3 +90,13 @@ def test_flag_blocks_signals_for_60_sessions():
     assert e["eligible"].iloc[29]
     assert not e["eligible"].iloc[30] and not e["eligible"].iloc[89]   # 30..89 = 60 sessions
     assert e["eligible"].iloc[90]
+
+
+def test_us_gate_20m_usd():
+    df = bars([10.0] * 25, [2_000_000] * 25)          # $20M/day exactly -> eligible
+    e = u.daily_eligibility(df, gates=u.US_GATES)
+    assert e["eligible"].iloc[-1] and e["book"].iloc[-1] == "us"
+    df = bars([10.0] * 25, [1_999_999] * 25)
+    assert not u.daily_eligibility(df, gates=u.US_GATES)["eligible"].iloc[-1]
+    df = bars([4.99] * 25, [9_000_000] * 25)
+    assert not u.daily_eligibility(df, gates=u.US_GATES)["eligible"].iloc[-1]

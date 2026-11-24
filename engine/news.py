@@ -55,11 +55,11 @@ def setups() -> list[bt.Setup]:
     return [bt.Setup(name, fn, ("value_traded_20d",), {"event": name}) for name, fn in EVENTS.items()]
 
 
-def tag_earnings(cands: pd.DataFrame, cal: pd.DatetimeIndex) -> tuple[pd.DataFrame, dict]:
+def tag_earnings(cands: pd.DataFrame, cal: pd.DatetimeIndex, directory=None) -> tuple[pd.DataFrame, dict]:
     """Add earnings (s is a reaction session) and earnings_covered (s inside the name's calendar)."""
     react, covered_rng, n_dates, names_with = {}, {}, 0, 0
     for sym in cands["yahoo"].unique():
-        when = earnings.load(sym)
+        when = earnings.load(sym, directory)
         if len(when) == 0:
             continue
         past = when[when.dt.tz_localize(None) <= cal[-1] + pd.Timedelta(days=1)]

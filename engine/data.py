@@ -46,7 +46,14 @@ def to_output_ticker(yahoo: str) -> str:
     for suffix, exch in SUFFIX_TO_EXCHANGE.items():
         if yahoo.upper().endswith(suffix):
             return f"{exch}:{yahoo[: -len(suffix)].replace('-', '.')}"
-    raise ValueError(f"not a Canadian Yahoo symbol: {yahoo!r}")
+    if "." in yahoo or not yahoo:
+        raise ValueError(f"not a Canadian or US Yahoo symbol: {yahoo!r}")
+    return f"US:{yahoo.replace('-', '.')}"  # US listings (phase 2c): 'BRK-B' -> 'US:BRK.B'
+
+
+def is_us(ticker_or_yahoo: str) -> bool:
+    return ticker_or_yahoo.upper().startswith("US:") or (
+        ":" not in ticker_or_yahoo and not any(ticker_or_yahoo.upper().endswith(s) for s in SUFFIX_TO_EXCHANGE))
 
 
 def to_yahoo(ticker: str) -> str:
@@ -54,6 +61,8 @@ def to_yahoo(ticker: str) -> str:
     if ":" not in ticker:
         return ticker
     exch, sym = ticker.split(":", 1)
+    if exch.upper() == "US":
+        return sym.replace(".", "-")
     return sym.replace(".", "-") + EXCHANGE_TO_SUFFIX[exch.upper()]
 
 

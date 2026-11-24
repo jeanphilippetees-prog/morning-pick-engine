@@ -23,14 +23,15 @@ TZ = "America/Toronto"
 log = logging.getLogger(__name__)
 
 
-def fetch(symbols: list[str], limit: int = 60, pause: float = 0.5) -> dict[str, int]:
+def fetch(symbols: list[str], limit: int = 60, pause: float = 0.5, directory=None) -> dict[str, int]:
     """Download and cache earnings timestamps. Returns {symbol: dates found}."""
     import yfinance as yf
 
-    DIR.mkdir(parents=True, exist_ok=True)
+    directory = DIR if directory is None else directory
+    directory.mkdir(parents=True, exist_ok=True)
     counts = {}
     for i, sym in enumerate(symbols):
-        path = DIR / f"{sym}.parquet"
+        path = directory / f"{sym}.parquet"
         if path.exists():
             counts[sym] = len(pd.read_parquet(path))
             continue
@@ -51,8 +52,8 @@ def fetch(symbols: list[str], limit: int = 60, pause: float = 0.5) -> dict[str, 
     return counts
 
 
-def load(sym: str) -> pd.Series:
-    path = DIR / f"{sym}.parquet"
+def load(sym: str, directory=None) -> pd.Series:
+    path = (DIR if directory is None else directory) / f"{sym}.parquet"
     if not path.exists():
         return pd.Series(dtype="datetime64[ns, America/Toronto]")
     return pd.read_parquet(path)["when"]

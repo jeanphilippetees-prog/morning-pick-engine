@@ -63,8 +63,12 @@ def config_name(r) -> str:
     return f"{r['book']} / {r['setup']} / {r['variant']}"
 
 
-HEAD_COLS = ["Config", "OOS trades", "OOS net exp.", "OOS win", "OOS PF", "OOS CAGR", "XIC CAGR",
-             "Random p95", "Pctile vs random", "IS net exp.", "IS trades"]
+def head_cols(bench: str = "XIC") -> list[str]:
+    return ["Config", "OOS trades", "OOS net exp.", "OOS win", "OOS PF", "OOS CAGR", f"{bench} CAGR",
+            "Random p95", "Pctile vs random", "IS net exp.", "IS trades"]
+
+
+HEAD_COLS = head_cols()
 
 
 def head_rows(df: pd.DataFrame) -> list[list[str]]:
@@ -74,7 +78,7 @@ def head_rows(df: pd.DataFrame) -> list[list[str]]:
              fmt(r["expectancy_IS"], "pct2"), fmt(r["trades_IS"], "int")] for _, r in df.iterrows()]
 
 
-def summary_lines(w: pd.DataFrame, what: str) -> list[str]:
+def summary_lines(w: pd.DataFrame, what: str, bench: str = "XIC") -> list[str]:
     n_enough = int(w["enough_OOS"].sum())
     e = w[w["enough_OOS"]]
     both = w[w["enough_OOS"] & (w["trades_IS"] >= MIN_TRADES) & w["beats_random_IS"] & w["beats_random_OOS"]]
@@ -84,16 +88,17 @@ def summary_lines(w: pd.DataFrame, what: str) -> list[str]:
         f"- {len(w)} configurations ({what}). {n_enough} have at least {MIN_TRADES} out-of-sample trades.",
         f"- Out-of-sample, among those {n_enough}: {int((e['expectancy_OOS'] > 0).sum())} have positive net "
         f"expectancy after costs, {int(e['beats_random_OOS'].sum())} beat the random-entry baseline (net expectancy "
-        f"above the 95th percentile of {bt.RANDOM_RUNS} random runs), {int(e['beats_xic_OOS'].sum())} beat XIC's "
+        f"above the 95th percentile of {bt.RANDOM_RUNS} random runs), {int(e['beats_xic_OOS'].sum())} beat {bench}'s "
         f"CAGR, and **{len(edge)} do both** (the spec's bar for a playbook proposal).",
         f"- Configurations that beat random in both periods with {MIN_TRADES}+ trades each: {len(both)}.",
         "",
     ]
     if len(edge):
-        out += ["### Configurations that clear the bar out-of-sample", "", table(HEAD_COLS, head_rows(edge)), ""]
+        out += ["### Configurations that clear the bar out-of-sample", "", table(head_cols(bench), head_rows(edge)), ""]
     out += [f"### Best out-of-sample configurations ({MIN_TRADES}+ OOS trades, by net expectancy)", "",
-            table(HEAD_COLS, head_rows(ranked.head(10))),
-            "### Worst out-of-sample configurations", "", table(HEAD_COLS, head_rows(ranked.tail(5).iloc[::-1])),
+            table(head_cols(bench), head_rows(ranked.head(10))),
+            "### Worst out-of-sample configurations", "",
+            table(head_cols(bench), head_rows(ranked.tail(5).iloc[::-1])),
             "Ranking on out-of-sample results is descriptive only. Picking the top row and calling it the rule "
             "would be tuning on the out-of-sample period; any change goes through the playbook's proposal process.",
             ""]
@@ -122,7 +127,7 @@ def matrix(w: pd.DataFrame, books, setups) -> list[str]:
     return out
 
 
-def full_tables(w: pd.DataFrame, books, setups) -> list[str]:
+def full_tables(w: pd.DataFrame, books, setups, bench: str = "XIC") -> list[str]:
     hdr = ["Exit"] + [f"{lab} IS / OOS" for _, lab, _ in METRIC_COLS]
     out = []
     for book in books:
@@ -139,7 +144,7 @@ def full_tables(w: pd.DataFrame, books, setups) -> list[str]:
                 (f"{fmt(base[rand_cells[c][0] + '_IS'], rand_cells[c][1])} / "
                  f"{fmt(base[rand_cells[c][0] + '_OOS'], rand_cells[c][1])}") if c in rand_cells else "-"
                 for c, _, _ in METRIC_COLS])
-            rows.append(["XIC buy and hold"] + [
+            rows.append([f"{bench} buy and hold"] + [
                 f"{fmt(base['xic_cagr_IS'], 'pct')} / {fmt(base['xic_cagr_OOS'], 'pct')}" if c == "cagr" else "-"
                 for c, _, _ in METRIC_COLS])
             rr = sub.set_index("variant")
@@ -152,7 +157,7 @@ def full_tables(w: pd.DataFrame, books, setups) -> list[str]:
     return out
 
 
-def by_year(yearly: pd.DataFrame, books, setups, variant: str = "base") -> list[str]:
+def by_year(yearly: pd.DataFrame, books, setups, variant: str = "base", bench: str = "XIC") -> list[str]:
     out = []
     for book in books:
         rows = []
@@ -163,12 +168,12 @@ def by_year(yearly: pd.DataFrame, books, setups, variant: str = "base") -> list[
                              fmt(r["expectancy"], "pct2"), fmt(r["rand_expectancy"], "pct2"),
                              fmt(r["book_return"], "pct"), fmt(r["xic_return"], "pct")])
         out += [f"### {book.name}", "", table(["Year", "Setup", "Trades", "Win", "Net exp.", "Random exp.",
-                                                 "Book return", "XIC return"], rows)]
+                                                 "Book return", f"{bench} return"], rows)]
     return out
 
 
-def write_trades(trades: pd.DataFrame, path) -> pd.DataFrame:
-    xic, _ = bt._load_clean(data.BENCHMARK)
+def write_trades(trades: pd.DataFrame, path, market: "bt.Market" = bt.CA) -> pd.DataFrame:
+    xic, _ = bt._load_clean(market.benchmark, market)
     adj = xic["adj_close"]
     t = trades.copy()
     t["ticker"] = t["yahoo"].map(data.to_output_ticker)
@@ -181,7 +186,7 @@ def write_trades(trades: pd.DataFrame, path) -> pd.DataFrame:
     return t
 
 
-def tail_sections(trades: pd.DataFrame, t_out: pd.DataFrame, books) -> list[str]:
+def tail_sections(trades: pd.DataFrame, t_out: pd.DataFrame, books, bench: str = "XIC") -> list[str]:
     skipped = trades.groupby("book").agg(trades=("net", "size"), with_skip=("skipped", lambda s: int((s > 0).sum())),
                                          bars_skipped=("skipped", "sum"))
     excess = (t_out["net"] - t_out["xic_window_return"]).groupby([t_out["book"], t_out["period"]]).mean()
@@ -191,8 +196,8 @@ def tail_sections(trades: pd.DataFrame, t_out: pd.DataFrame, books) -> list[str]
             table(["Book", "Trades", "Trades with a skipped bar", "Bars skipped"],
                   [[b, fmt(r["trades"], "int"), fmt(r["with_skip"], "int"), fmt(r["bars_skipped"], "int")]
                    for b, r in skipped.iterrows()]),
-            "## XIC over each trade's own window (secondary benchmark)", "",
-            "Average of (trade net return - XIC total return from the signal close to the exit date), all "
+            f"## {bench} over each trade's own window (secondary benchmark)", "",
+            f"Average of (trade net return - {bench} total return from the signal close to the exit date), all "
             "configurations pooled:", "",
             table(["Book", "IS", "OOS"], [[b.name, fmt(excess.get((b.name, "IS")), "pct2"),
                                           fmt(excess.get((b.name, "OOS")), "pct2")] for b in books])]

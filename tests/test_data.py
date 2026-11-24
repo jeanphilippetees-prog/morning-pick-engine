@@ -25,9 +25,12 @@ def test_tmx_class_shares_use_dash():
     assert data.tmx_symbol_to_yahoo("abc", "TSXV") == "ABC.V"
 
 
-def test_non_canadian_symbol_rejected():
+def test_us_symbols_map_to_us_prefix():
+    assert data.to_output_ticker("AAPL") == "US:AAPL"
+    assert data.to_output_ticker("BRK-B") == "US:BRK.B"
+    assert data.to_yahoo("US:BRK.B") == "BRK-B"
     with pytest.raises(ValueError):
-        data.to_output_ticker("AAPL")
+        data.to_output_ticker("XYZ.L")
 
 
 def test_normalize_strips_tz_dedupes_and_drops_empty_close():

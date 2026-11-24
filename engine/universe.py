@@ -118,17 +118,23 @@ MAX_ZERO_VOLUME = 4
 LOOKBACK = 60
 
 
-def daily_eligibility(df: pd.DataFrame, blocked_dates=()) -> pd.DataFrame:
-    """One row per session s with the gate inputs and the eligibility result."""
+CA_GATES = (("regular", REGULAR), ("smallcap", SMALLCAP))
+US_GATES = (("us", {"min_price": 5.0, "max_price": float("inf"), "min_value": 20_000_000}),)  # USD
+
+
+def daily_eligibility(df: pd.DataFrame, blocked_dates=(), gates=CA_GATES) -> pd.DataFrame:
+    """One row per session s with the gate inputs and the eligibility result.
+
+    gates: (book name, {min_price, max_price, min_value}) in priority order.
+    """
     value = df["close"] * df["volume"]
     out = pd.DataFrame(index=df.index)
     out["close"] = df["close"]
     out["value_traded_20d"] = value.rolling(20, min_periods=20).mean()
     out["zero_volume_20d"] = (df["volume"] == 0).astype(int).rolling(20, min_periods=20).sum()
-    reg = (out["close"] >= REGULAR["min_price"]) & (out["value_traded_20d"] >= REGULAR["min_value"])
-    small = ((out["close"] >= SMALLCAP["min_price"]) & (out["close"] < SMALLCAP["max_price"])
-             & (out["value_traded_20d"] >= SMALLCAP["min_value"]))
-    out["book"] = np.select([reg, small], ["regular", "smallcap"], default="")
+    conds = [(out["close"] >= g["min_price"]) & (out["close"] < g["max_price"])
+             & (out["value_traded_20d"] >= g["min_value"]) for _, g in gates]
+    out["book"] = np.select(conds, [name for name, _ in gates], default="")
     out["gate_ok"] = (out["book"] != "") & (out["zero_volume_20d"] <= MAX_ZERO_VOLUME) & (df["volume"] > 0)
     flagged = pd.Series(df.index.isin(pd.DatetimeIndex(blocked_dates)), index=df.index).astype(int)
     out["clean_lookback"] = flagged.rolling(LOOKBACK, min_periods=1).sum() == 0
