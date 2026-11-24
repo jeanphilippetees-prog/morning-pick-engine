@@ -39,16 +39,33 @@ def test_bad_ohlc():
     assert "bad_ohlc" in flags_of(df)
 
 
-def test_halving_without_recorded_split_is_possible_split():
-    f = flags_of(bars([10, 5.0], opens=[10, 5.0]))
-    assert {"jump", "possible_split", "gap_jump"} <= set(f)
+def test_lasting_10x_jump_without_recorded_split_is_level_shift():
+    # price was already sliding before the jump; compare with the prior close
+    # TLRY.TO-style 1-for-10 consolidation that Yahoo never adjusted
+    closes = [1.47, 1.29, 1.15, 1.10, 10.78, 9.86, 10.05, 10.17, 9.97]
+    f = flags_of(bars(closes))
+    assert {"jump", "gap_jump", "level_shift"} <= set(f)
+    assert "bad_print" not in f
+
+
+def test_one_day_half_price_print_is_bad_print():
+    # OMG.V-style: 0.15 flat, one print at 0.075, then back to 0.15
+    closes = [0.15] * 5 + [0.075] + [0.15] * 5
+    f = q.bar_flags(bars(closes))
+    assert list(f.loc[f["flag"].isin(["bad_print", "level_shift"]), "flag"]) == ["bad_print", "bad_print"]
+
+
+def test_tiny_recorded_split_is_not_checked():
+    # Yahoo records stock dividends as splits like 0.987; a normal 1% move must not flag
+    df = bars([10.0, 9.87])
+    assert flags_of(df, pd.Series([0.987], index=[df.index[1]])) == []
 
 
 def test_recorded_split_still_in_prices_is_unadjusted():
     df = bars([10, 5.0], opens=[10, 5.0])
     splits = pd.Series([2.0], index=[df.index[1]])
     f = flags_of(df, splits)
-    assert "split_unadjusted" in f and "possible_split" not in f
+    assert "split_unadjusted" in f and "level_shift" not in f
 
 
 def test_recorded_split_properly_adjusted_is_clean():
@@ -63,3 +80,10 @@ def test_missing_days_against_calendar():
     assert list(miss) == [cal[2]]
     # days before the first bar are not "missing"
     assert list(q.missing_days(df.iloc[2:], cal)) == []
+
+
+def test_two_tick_flip_flop_is_bad_print_not_level_shift():
+    # ATX-style: a thin name bouncing between 0.30 and 0.60 for days at a time
+    closes = [0.6, 0.6, 0.3, 0.3, 0.3, 0.6, 0.6, 0.6, 0.6, 0.6]
+    f = q.bar_flags(bars(closes))
+    assert list(f.loc[f["flag"].isin(["bad_print", "level_shift"]), "flag"]) == ["bad_print", "bad_print"]

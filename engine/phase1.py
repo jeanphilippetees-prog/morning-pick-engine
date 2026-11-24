@@ -12,6 +12,7 @@ Writes:
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 from datetime import date, datetime, timezone
 
@@ -21,6 +22,7 @@ from engine import data, quality, universe
 
 RESULTS = data.ROOT / "results"
 YEARS = 10
+RUN_STATS = data.DATA_DIR / "phase1_run.json"
 
 
 def _start(today: date) -> str:
@@ -44,6 +46,9 @@ def build(today: date) -> tuple[pd.DataFrame, list[str], list[str]]:
 
     symbols = uni["yahoo"].tolist() + [data.BENCHMARK]
     failed = data.update_cache(symbols, _start(today), full=True)
+    RUN_STATS.write_text(json.dumps({"date": today.isoformat(), "candidates": len(cands),
+                                     "failed": failed, "no_recent_count": len(no_recent),
+                                     "no_recent": no_recent}, indent=1))
     return uni, failed, no_recent
 
 
@@ -67,6 +72,9 @@ def _md_table(df: pd.DataFrame) -> str:
 
 def report(today: date, failed: list[str] | None = None, no_recent: list[str] | None = None) -> str:
     uni = pd.read_csv(RESULTS / "universe_v1.csv")
+    stats = json.loads(RUN_STATS.read_text()) if RUN_STATS.exists() else {}
+    failed = failed if failed is not None else stats.get("failed")
+    n_no_recent = len(no_recent) if no_recent is not None else stats.get("no_recent_count", "n/a")
     start = pd.Timestamp(_start(today))
     xic = data.load_cached(data.BENCHMARK)
     if xic is None:
@@ -85,7 +93,8 @@ def report(today: date, failed: list[str] | None = None, no_recent: list[str] | 
         total_bars += len(df)
     summ = pd.DataFrame(summaries).merge(uni[["yahoo", "ticker", "book"]], on="yahoo", how="left")
     summ["book"] = summ["book"].fillna("benchmark")
-    flags = pd.concat(all_flags, ignore_index=True)
+    summ["ticker"] = summ["yahoo"].map(data.to_output_ticker)
+    flags = pd.concat([f for f in all_flags if len(f)], ignore_index=True)
     flags.sort_values(["yahoo", "date", "flag"]).to_csv(
         RESULTS / "data_quality_flags_v1.csv", index=False, date_format="%Y-%m-%d")
 
@@ -98,7 +107,7 @@ def report(today: date, failed: list[str] | None = None, no_recent: list[str] | 
                     missing_days=("missing_days", "sum"), zero_volume_days=("zero_volume_days", "sum"),
                     jumps=("jumps", "sum"), gap_jumps=("gap_jumps", "sum"), bad_ohlc=("bad_ohlc", "sum"),
                     splits_recorded=("splits_recorded", "sum"), split_unadjusted=("split_unadjusted", "sum"),
-                    possible_split=("possible_split", "sum"))
+                    level_shift=("level_shift", "sum"), bad_print=("bad_print", "sum"))
                .reset_index())
     exch = uni.groupby(["book", "exchange"]).size().unstack(fill_value=0).reset_index()
 
@@ -109,8 +118,10 @@ def report(today: date, failed: list[str] | None = None, no_recent: list[str] | 
     jump_rows = (flags[flags["flag"].isin(["jump", "gap_jump"])]
                  .merge(summ[["yahoo", "ticker", "book"]], on="yahoo")
                  .sort_values("date", ascending=False))
-    split_issue = (flags[flags["flag"].isin(["split_unadjusted", "possible_split"])]
-                   .merge(summ[["yahoo", "ticker"]], on="yahoo"))
+    split_issue = (flags[flags["flag"].isin(["split_unadjusted", "level_shift"])]
+                   .merge(summ[["yahoo", "ticker", "book"]], on="yahoo").sort_values(["flag", "date"]))
+    bad_prints = (flags[flags["flag"] == "bad_print"].merge(summ[["yahoo", "ticker"]], on="yahoo")
+                  .groupby("ticker").size().sort_values(ascending=False).rename("bad_prints").reset_index())
     bars_flagged = quality.flagged_bar_share(flags, total_bars)
 
     yrs_bins = pd.cut(stocks["years"], [-0.01, 1, 3, 5, 9.9, 99], labels=["<1y", "1-3y", "3-5y", "5-9.9y", "10y"])
@@ -130,8 +141,8 @@ def report(today: date, failed: list[str] | None = None, no_recent: list[str] | 
         "",
         _md_table(exch),
         f"- Candidates in the directory after dropping ETFs, funds, preferreds, debentures, warrants, "
-        f"USD lines and capital pool companies: see data/candidates.csv.",
-        f"- Candidates with no recent Yahoo data: {len(no_recent) if no_recent is not None else 'n/a (report-only run)'}.",
+        f"USD lines and capital pool companies: {stats.get('candidates', 'see data/candidates.csv')}.",
+        f"- Candidates with no recent Yahoo data: {n_no_recent}.",
         f"- Universe names whose 10-year download failed: {len(failed)}"
         + (f" ({', '.join(failed[:30])}{' ...' if len(failed) > 30 else ''})" if failed else "") + ".",
         "",
@@ -167,12 +178,20 @@ def report(today: date, failed: list[str] | None = None, no_recent: list[str] | 
         _md_table(jump_rows.head(25)[["date", "ticker", "book", "flag", "detail"]]),
         "## Split checks",
         "",
-        f"- Splits recorded by Yahoo across the universe: {int(stocks['splits_recorded'].sum())}.",
+        f"- Splits recorded by Yahoo across the universe: {int(stocks['splits_recorded'].sum())}, plus "
+        f"{int(stocks['minor_adjustments'].sum())} minor adjustments (ratios between 0.8 and 1.25: stock "
+        "dividends and unit consolidations; too small to check against a jump).",
         f"- Recorded splits still visible as a price jump (adjustment failed): {int(stocks['split_unadjusted'].sum())}.",
-        f"- Split-sized jumps (ratio near 2, 3, 4, 5, 10, 20 or their inverse) with no recorded split: "
-        f"{int(stocks['possible_split'].sum())}.",
+        f"- Level shifts: a split-sized jump (ratio near 2, 3, 4, 5, 10, 20 or the inverse) with no split "
+        f"recorded, where the new price level holds: {int(stocks['level_shift'].sum())}. Each is either an "
+        "unrecorded split (**history before it is on the wrong scale**) or a real crash or spike; price data "
+        "alone cannot tell them apart, so each needs a hand check before phase 2.",
         "",
-        _md_table(split_issue[["date", "ticker", "flag", "detail"]].head(30)),
+        _md_table(split_issue[["date", "ticker", "book", "flag", "detail"]]),
+        f"- Bad prints: split-sized jumps that revert, or that flip back within {quality.FLIP_WINDOW} "
+        f"sessions (thin names bouncing between two ticks): {int(stocks['bad_print'].sum())}, by name:",
+        "",
+        _md_table(bad_prints.head(20)),
         "## Bad OHLC bars",
         "",
         "High below low, open or close outside the day's range, or a price <= 0.",

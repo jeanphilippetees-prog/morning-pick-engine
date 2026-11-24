@@ -38,7 +38,7 @@ yahoo,ticker,book,last_date,close,value_traded_20d,sessions,exchange,name
 RY.TO,TSX:RY,regular,2026-11-24,180.1200,950000000.0000,20,TSX,Royal Bank of Canada
 ```
 
-**results/data_quality_flags_v1.csv** (phase 1): one row per flagged bar. `flag` is one of jump, gap_jump, zero_volume, bad_ohlc, split_unadjusted, possible_split, missing_day. Later phases must not trade on a flagged bar.
+**results/data_quality_flags_v1.csv** (phase 1): one row per flagged bar. `flag` is one of jump, gap_jump, zero_volume, bad_ohlc, split_unadjusted, level_shift, bad_print, missing_day. Later phases must not trade on a flagged bar.
 
 ```csv
 yahoo,date,flag,detail
