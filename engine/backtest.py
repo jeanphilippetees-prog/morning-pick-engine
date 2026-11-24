@@ -74,7 +74,7 @@ def build_outcomes() -> pd.DataFrame:
     cal = xic.index
     next_session = pd.Series(cal[1:], index=cal[:-1])
 
-    rows = []
+    frames, total = [], 0
     syms = elig.loc[elig["eligible"], "yahoo"].unique()
     elig_by_sym = {s: g.set_index("date") for s, g in elig[elig["yahoo"].isin(syms)].groupby("yahoo")}
     for n, sym in enumerate(syms):
@@ -87,6 +87,7 @@ def build_outcomes() -> pd.DataFrame:
         flagged = df.index.isin(list(blocking.get(sym, ()))).tolist()
         o, h, l, c, v = (df[k].tolist() for k in ("open", "high", "low", "close", "volume"))
         cumdiv = sim.cumulative_dividends(df.index, acts.get("dividends")).tolist()
+        rows = []  # one ticker at a time, turned into a compact frame below
         for p in np.flatnonzero(ok.to_numpy()):
             s = df.index[p]
             t = next_session.get(s)
@@ -109,12 +110,25 @@ def build_outcomes() -> pd.DataFrame:
                                 float(f["atr14"].iat[p]), cost)
                     r["exit_date"] = df.index[r.pop("exit_index")]
                 rows.append({**base, "variant": var, **r})
-        if n % 200 == 0:
-            logging.info("outcomes: %d/%d names, %d rows", n, len(syms), len(rows))
-    out = pd.DataFrame(rows)
-    out["type"] = out["yahoo"].map(data.security_type)
+        if rows:
+            frames.append(_compact(pd.DataFrame(rows)))
+            total += len(rows)
+        if n % 100 == 0:
+            logging.info("outcomes: %d/%d names, %d rows", n, len(syms), total)
+    out = pd.concat(frames, ignore_index=True)
+    for col in ("yahoo", "universe", "variant", "reason"):
+        out[col] = out[col].astype("category")
+    out["type"] = out["yahoo"].map(data.security_type).astype("category")
     out.to_parquet(OUTCOMES)
     return out
+
+
+def _compact(df: pd.DataFrame) -> pd.DataFrame:
+    for col in ("price_score", "trend", "thrust", "room", "fits_stop", "sessions", "skipped"):
+        df[col] = df[col].astype("int8")
+    for col in ("value_traded_20d", "limit", "fill", "exit_price", "dividends", "gross", "net"):
+        df[col] = df[col].astype("float64")
+    return df
 
 
 # --- 3: books -------------------------------------------------------------------

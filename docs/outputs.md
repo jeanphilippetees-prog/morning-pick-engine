@@ -61,3 +61,14 @@ TSXV:XYZ,2024-03-11,jump,close +52.0%
 **results/data_quality_v2.md** (phase 1, v2): candidates and download, point-in-time eligibility by book and year, corrections and automatic drops, flags after cleaning, caveats. The v1 files (universe_v1.csv, data_quality_flags_v1.csv, data_quality_v1.md) are kept as reviewed; they use the old `TSX:BBD-B` style tickers.
 
 **results/backtest_v1.md** (on demand): one table per book with every metric from docs/rules.md, base and each variant as rows, in-sample and out-of-sample as columns, the random baseline and XIC on the last rows, then a short list of caveats. Plus results/trades_v1.csv with every simulated trade.
+
+The report also has a summary (best and worst out-of-sample configurations, counts that beat random and XIC), setup frequency per day, an all-configurations matrix per book, by-year tables, flagged-bar counts and XIC over each trade's own window.
+
+**results/trades_v1.csv** (phase 2): one row per filled and closed trade in every configuration. Missed orders and trades still open at the end of the data are not rows.
+
+```csv
+book,threshold,market_filter,variant,period,ticker,type,universe,signal_date,fill_date,exit_date,price_score,trend,thrust,room,fits_stop,limit,fill,exit_price,reason,sessions,skipped_bars,dividends,gross,net,shares,xic_window_return
+main,3,Yes,base,OOS,TSX:XYZ,common,regular,2024-03-08,2024-03-11,2024-03-15,3,1,0,1,1,10.05,9.98,10.7784,Target,5,0,0,0.08,0.077,334,0.0041
+```
+
+`period` is IS (fills 2016-2022) or OOS (fills from 2023). `reason` is Stop, Gap stop, Target, Gap target or Time stop. `shares` is whole for the main book and fractional for shadow and small-cap. `xic_window_return` is XIC's total return from the signal close to the exit date.
