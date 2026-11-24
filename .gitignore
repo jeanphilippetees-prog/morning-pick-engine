@@ -1,0 +1,13 @@
+# Local price cache (rebuilt from yfinance; never committed)
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# Secrets never belong in the repo
+.env
