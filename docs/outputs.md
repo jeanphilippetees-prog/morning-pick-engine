@@ -72,3 +72,7 @@ main,3,Yes,base,OOS,TSX:XYZ,common,regular,2024-03-08,2024-03-11,2024-03-15,3,1,
 ```
 
 `period` is IS (fills 2016-2022) or OOS (fills from 2023). `reason` is Stop, Gap stop, Target, Gap target or Time stop. `shares` is whole for the main book and fractional for shadow and small-cap. `xic_window_return` is XIC's total return from the signal close to the exit date.
+
+**results/backtest_v2.md** and **results/trades_v2.csv** (phase 2, v2 after the PM review): same layout as v1, plus a section on what each correction changed (blocking flags, $1,000 main account with skips for price and cash, small-cap strict fill). Books: main, shadow, smallcap, smallcap_strict. trades_v2.csv has the trades_v1.csv columns plus `setup`, `strict` and the event inputs `ret_1d`, `vol_ratio`, `gap_1d`, `ret_20d_prior`.
+
+**results/news_proxy_v1.md** and **results/news_trades_v1.csv** (phase 2b): news-proxy events (`event` column: news4, news6, news4 gap, news4 intraday, news4 reversal, news4 continuation, news4 earnings, news4 non-earnings), same books and metrics as backtest v2, a trade-level event study with no slot limit, the earnings-vs-non-earnings comparison, earnings-date coverage, by year and caveats. news_trades_v1.csv has the trades_v2.csv columns plus `event` and `earnings`.

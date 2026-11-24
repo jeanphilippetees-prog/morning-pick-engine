@@ -244,3 +244,18 @@ def test_atr14_wilder():
     df = bars([(10.0, 10.2, 9.8, 10.0)] * 30)
     assert sim.atr14(df).iloc[-1] == pytest.approx(0.4)
     assert math.isnan(sim.atr14(df).iloc[12])
+
+
+# --- Strict small-cap fill (sensitivity) --------------------------------------
+
+def test_strict_fill_needs_low_half_a_percent_below_limit():
+    # limit 10.05 -> strict level 10.05 x 0.995 = 9.99975
+    assert sim.fill_price(10.05, open_=9.98, low=10.00, volume=1000, strict=True) is None
+    assert sim.fill_price(10.05, open_=9.98, low=9.99, volume=1000, strict=True) == 9.98
+    assert sim.fill_price(10.05, open_=10.20, low=9.99, volume=1000, strict=True) == 10.05
+    assert sim.fill_price(10.05, open_=10.20, low=10.01, volume=1000) == 10.05   # normal rule fills
+
+
+def test_strict_fill_in_a_trade():
+    t = trade([(10.20, 10.30, 10.01, 10.10)] + [FLAT] * 9, limit=10.05, strict=True)
+    assert t["reason"] == "Missed"
