@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
-from engine import backtest as bt, data
+from engine import backtest as bt, data, files
 
 MIN_TRADES = 100  # the spec's bar for a result to mean something
 
@@ -177,7 +177,7 @@ def write_trades(trades: pd.DataFrame, path) -> pd.DataFrame:
     extra = [c for c in ("threshold", "market_filter", "event", "earnings") if c in t.columns]
     cols = TRADE_COLS[:2] + extra + [c for c in TRADE_COLS[2:] if c in t.columns]
     t = t[cols].rename(columns={"s": "signal_date", "skipped": "skipped_bars"})
-    t.to_csv(path, index=False, date_format="%Y-%m-%d", float_format="%.6g")
+    files.write_csv_gz(t, path, index=False, date_format="%Y-%m-%d", float_format="%.6g")
     return t
 
 

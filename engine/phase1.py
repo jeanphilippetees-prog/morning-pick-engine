@@ -9,7 +9,7 @@ Writes (git-ignored):
     data/clean/eligibility.parquet                        daily point-in-time eligibility
     data/clean/flags.parquet                              every flagged bar
 Writes (committed):
-    results/universe_v2.csv, results/data_quality_flags_v2.csv, results/data_quality_v2.md
+    results/universe_v2.csv, results/data_quality_flags_v2.csv.gz, results/data_quality_v2.md
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from datetime import date, datetime, timezone
 
 import pandas as pd
 
-from engine import data, quality, universe
+from engine import data, files, quality, universe
 
 RESULTS = data.ROOT / "results"
 CLEAN = data.DATA_DIR / "clean"
@@ -118,8 +118,8 @@ def report(today: date) -> str:
 
     flags_out = flags.copy()
     flags_out.insert(1, "ticker", flags_out["yahoo"].map(data.to_output_ticker))
-    flags_out.sort_values(["ticker", "date", "flag"]).drop(columns="yahoo").to_csv(
-        RESULTS / f"data_quality_flags_{VERSION}.csv", index=False, date_format="%Y-%m-%d")
+    files.write_csv_gz(flags_out.sort_values(["ticker", "date", "flag"]).drop(columns="yahoo"),
+                       RESULTS / f"data_quality_flags_{VERSION}.csv", index=False, date_format="%Y-%m-%d")
 
     # Per-ticker summaries on the cleaned data.
     summaries = []
@@ -233,7 +233,7 @@ def report(today: date) -> str:
         "is dropped (the name's data starts at the shift). Sorted by eligible days after the drop.",
         "",
         _md_table(auto.head(40) if len(auto) else pd.DataFrame()),
-        (f"{len(auto)} names in total; the full list is in results/data_quality_flags_{VERSION}.csv as the "
+        (f"{len(auto)} names in total; the full list is in results/data_quality_flags_{VERSION}.csv.gz as the "
          "level shift dates." if len(auto) else ""),
         "",
         "## Summary after cleaning",

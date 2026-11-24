@@ -51,7 +51,7 @@ RY.TO,TSX:RY,regular,common,2026-11-23,270.2900,998084138.8293,0,True,TSX,Royal 
 
 `type` is `common` or `unit` (REIT and trust units, `.UN`). `clean_lookback` is False when a blocking flag sits in the last 60 sessions.
 
-**results/data_quality_flags_v2.csv** (phase 1, v2): one row per flagged bar after corrections. `flag` is one of jump, gap_jump, zero_volume, bad_ohlc, split_unadjusted, level_shift, bad_print, missing_day. Blocking flags (jump, gap_jump, bad_ohlc, bad_print, split_unadjusted, level_shift) stop any signal whose 60-session lookback contains them and are skipped inside a trade.
+**results/data_quality_flags_v2.csv.gz** (phase 1, v2): one row per flagged bar after corrections. `flag` is one of jump, gap_jump, zero_volume, bad_ohlc, split_unadjusted, level_shift, bad_print, missing_day. Blocking flags (jump, gap_jump, bad_ohlc, bad_print, split_unadjusted, level_shift) stop any signal whose 60-session lookback contains them and are skipped inside a trade.
 
 ```csv
 ticker,date,flag,detail
@@ -64,7 +64,7 @@ TSXV:XYZ,2024-03-11,jump,close +52.0%
 
 The report also has a summary (best and worst out-of-sample configurations, counts that beat random and XIC), setup frequency per day, an all-configurations matrix per book, by-year tables, flagged-bar counts and XIC over each trade's own window.
 
-**results/trades_v1.csv** (phase 2): one row per filled and closed trade in every configuration. Missed orders and trades still open at the end of the data are not rows.
+**results/trades_v1.csv.gz** (phase 2): one row per filled and closed trade in every configuration. Missed orders and trades still open at the end of the data are not rows.
 
 ```csv
 book,threshold,market_filter,variant,period,ticker,type,universe,signal_date,fill_date,exit_date,price_score,trend,thrust,room,fits_stop,limit,fill,exit_price,reason,sessions,skipped_bars,dividends,gross,net,shares,xic_window_return
@@ -73,6 +73,8 @@ main,3,Yes,base,OOS,TSX:XYZ,common,regular,2024-03-08,2024-03-11,2024-03-15,3,1,
 
 `period` is IS (fills 2016-2022) or OOS (fills from 2023). `reason` is Stop, Gap stop, Target, Gap target or Time stop. `shares` is whole for the main book and fractional for shadow and small-cap. `xic_window_return` is XIC's total return from the signal close to the exit date.
 
-**results/backtest_v2.md** and **results/trades_v2.csv** (phase 2, v2 after the PM review): same layout as v1, plus a section on what each correction changed (blocking flags, $1,000 main account with skips for price and cash, small-cap strict fill). Books: main, shadow, smallcap, smallcap_strict. trades_v2.csv has the trades_v1.csv columns plus `setup`, `strict` and the event inputs `ret_1d`, `vol_ratio`, `gap_1d`, `ret_20d_prior`.
+**results/backtest_v2.md** and **results/trades_v2.csv.gz** (phase 2, v2 after the PM review): same layout as v1, plus a section on what each correction changed (blocking flags, $1,000 main account with skips for price and cash, small-cap strict fill). Books: main, shadow, smallcap, smallcap_strict. trades_v2.csv has the trades_v1.csv columns plus `setup`, `strict` and the event inputs `ret_1d`, `vol_ratio`, `gap_1d`, `ret_20d_prior`.
 
-**results/news_proxy_v1.md** and **results/news_trades_v1.csv** (phase 2b): news-proxy events (`event` column: news4, news6, news4 gap, news4 intraday, news4 reversal, news4 continuation, news4 earnings, news4 non-earnings), same books and metrics as backtest v2, a trade-level event study with no slot limit, the earnings-vs-non-earnings comparison, earnings-date coverage, by year and caveats. news_trades_v1.csv has the trades_v2.csv columns plus `event` and `earnings`.
+**results/news_proxy_v1.md** and **results/news_trades_v1.csv.gz** (phase 2b): news-proxy events (`event` column: news4, news6, news4 gap, news4 intraday, news4 reversal, news4 continuation, news4 earnings, news4 non-earnings), same books and metrics as backtest v2, a trade-level event study with no slot limit, the earnings-vs-non-earnings comparison, earnings-date coverage, by year and caveats. news_trades_v1.csv has the trades_v2.csv columns plus `event` and `earnings`.
+
+**Compression:** no committed file may be over 10 MB (CLAUDE.md). Trades files and the v2 flags file are stored only as gzip-compressed CSV: results/trades_v1.csv.gz, results/trades_v2.csv.gz, results/news_trades_v1.csv.gz, results/data_quality_flags_v2.csv.gz (and later trades files the same way). The CSV inside is unchanged; pandas, Python's gzip module and most spreadsheet tools read it directly. engine/files.py reads either name.
