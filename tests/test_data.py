@@ -12,7 +12,8 @@ def raw_frame(dates, closes, tz="America/Toronto"):
 
 
 @pytest.mark.parametrize("yahoo,out", [("XYZ.TO", "TSX:XYZ"), ("ABC.V", "TSXV:ABC"), ("Q.CN", "CSE:Q"),
-                                       ("BBD-B.TO", "TSX:BBD-B")])
+                                       ("BBD-B.TO", "TSX:BBD.B"), ("REI-UN.TO", "TSX:REI.UN"),
+                                       ("CCL-B.TO", "TSX:CCL.B")])
 def test_ticker_round_trip(yahoo, out):
     assert data.to_output_ticker(yahoo) == out
     assert data.to_yahoo(out) == yahoo
@@ -66,3 +67,9 @@ def test_cache_round_trip(tmp_path):
     data.save_cached("XYZ.TO", df, tmp_path)
     pd.testing.assert_frame_equal(data.load_cached("XYZ.TO", tmp_path), df, check_freq=False)
     assert data.load_cached("NOPE.TO", tmp_path) is None
+
+
+def test_security_type():
+    assert data.security_type("REI-UN.TO") == "unit"
+    assert data.security_type("RY.TO") == "common"
+    assert data.security_type("BBD-B.TO") == "common"

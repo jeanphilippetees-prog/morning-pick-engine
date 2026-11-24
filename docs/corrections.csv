@@ -1,0 +1,17 @@
+ticker,date,ratio,reason,source
+TSX:TLRY,2025-12-02,0.1,1-for-10 reverse split not adjusted by Yahoo,https://www.sec.gov/Archives/edgar/data/1731348/000143774925036448/tlry20251122_8k.htm
+TSX:TLO,2026-01-27,0.1,1-for-10 share consolidation (effective 2026-01-23; consolidated trading from 2026-01-27) not adjusted by Yahoo,https://www.newsfilecorp.com/release/281717/Talon-Metals-Announces-Completion-of-Share-Consolidation
+TSX:FDY,2020-07-08,0.25,1-for-4 consolidation as CopperBank Resources not adjusted by Yahoo,https://www.miningstockeducation.com/2020/07/copperbank-announces-share-consolidation-effective-date-and-private-placement/
+TSX:CVE,2020-03-09,1,verified real move: -52% in the OPEC+ oil price war crash,https://www.bnnbloomberg.ca/tsx-plunges-loonie-falls-amid-oil-collapse-1.1402560
+TSX:BHC,2022-07-28,1,verified real move: about -50% after the Xifaxan patent ruling,https://www.fool.com/investing/2022/07/28/why-shares-of-bausch-health-companies-dropped-544
+TSX:SSRM,2024-02-13,1,verified real move: Copler heap-leach landslide,https://www.bnnbloomberg.ca/ssr-mining-shares-plunge-54-after-landslide-at-turkish-mine-1.2034360
+TSX:LAC,2025-09-24,1,verified real move: report of a US government equity stake,https://www.nasdaq.com/articles/why-lithium-americas-stock-almost-doubled-today
+TSX:VZLA,2020-07-08,1,verified real move: doubled on Panuco drill results,https://mining-journal.com/precious-metals/news/1390573/vizsla-doubles-drilling-results
+TSX:SDE,2023-06-21,1,verified real move: ex-date of the $9.50 cash distribution (in Yahoo dividends),https://boereport.com/2023/05/10/spartan-delta-corp-announces-the-completion-of-previously-announced-asset-sale-and-provides-additional-details-with-respect-to-the-distribution-of-cash-proceeds-and-securities-of-logan-energy-corp-t/
+TSX:SDE,2019-11-13,0,unconfirmed: price flips 1.00/2.00 on near-zero volume in 2019; history before dropped,none found
+TSX:TLG,2017-02-15,0,unconfirmed: x1.9 on thin volume (no consolidation found; Pitchblack's 4-for-1 was 2017-12-20); history before dropped,none found
+TSX:CVVY,2017-11-02,0,unconfirmed: x2.3 on 2017-10-04 then x9 on 2017-11-02 (no consolidation found); history before dropped,none found
+TSXV:ZDC,2020-04-06,0,unconfirmed: x0.5 at $0.02-0.05 on thin volume; history before dropped,none found
+TSX:ATX,2020-09-29,0,unconfirmed: x1.9 after years of two-tick flips on thin volume; history before dropped,none found
+TSX:HMMC,2025-01-06,0,unconfirmed: x2.1 on 2024-01-24 and x0.48 on 2025-01-06 on near-zero volume; history before dropped,none found
+TSXV:MOON,2024-08-16,0,unconfirmed: x2 on 2024-08-16 (no consolidation found; the 1-for-10 was 2025-03-14); history before dropped,none found

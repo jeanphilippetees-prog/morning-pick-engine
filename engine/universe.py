@@ -17,6 +17,7 @@ import re
 import urllib.request
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from engine.data import tmx_symbol_to_yahoo
@@ -102,3 +103,49 @@ def filter_universe(prices_by_symbol: dict[str, pd.DataFrame]) -> pd.DataFrame:
 def save_universe(universe: pd.DataFrame, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     universe.to_csv(path, index=False, date_format="%Y-%m-%d", float_format="%.4f")
+
+
+# --- Point-in-time eligibility ------------------------------------------------
+#
+# Computed at the close of each session s. A name may get a signal for the next
+# session t only if, at the close of s (= t-1):
+#   - it passes a book gate (price and 20-day average value traded),
+#   - no more than MAX_ZERO_VOLUME of its last 20 sessions had zero volume,
+#   - session s itself traded (volume > 0): no new signal on a zero-volume day,
+#   - none of its last LOOKBACK sessions (s included) carries a blocking flag.
+
+MAX_ZERO_VOLUME = 4
+LOOKBACK = 60
+
+
+def daily_eligibility(df: pd.DataFrame, blocked_dates=()) -> pd.DataFrame:
+    """One row per session s with the gate inputs and the eligibility result."""
+    value = df["close"] * df["volume"]
+    out = pd.DataFrame(index=df.index)
+    out["close"] = df["close"]
+    out["value_traded_20d"] = value.rolling(20, min_periods=20).mean()
+    out["zero_volume_20d"] = (df["volume"] == 0).astype(int).rolling(20, min_periods=20).sum()
+    reg = (out["close"] >= REGULAR["min_price"]) & (out["value_traded_20d"] >= REGULAR["min_value"])
+    small = ((out["close"] >= SMALLCAP["min_price"]) & (out["close"] < SMALLCAP["max_price"])
+             & (out["value_traded_20d"] >= SMALLCAP["min_value"]))
+    out["book"] = np.select([reg, small], ["regular", "smallcap"], default="")
+    out["gate_ok"] = (out["book"] != "") & (out["zero_volume_20d"] <= MAX_ZERO_VOLUME) & (df["volume"] > 0)
+    flagged = pd.Series(df.index.isin(pd.DatetimeIndex(blocked_dates)), index=df.index).astype(int)
+    out["clean_lookback"] = flagged.rolling(LOOKBACK, min_periods=1).sum() == 0
+    out["eligible"] = out["gate_ok"] & out["clean_lookback"]
+    return out
+
+
+def eligibility_by_year(elig: dict[str, pd.DataFrame], calendar: pd.DatetimeIndex) -> pd.DataFrame:
+    """Average number of eligible names per session, by book and year."""
+    counts = []
+    for book in ("regular", "smallcap"):
+        gate = sum((e["gate_ok"] & (e["book"] == book)).reindex(calendar, fill_value=False).astype(int)
+                   for e in elig.values())
+        full = sum((e["eligible"] & (e["book"] == book)).reindex(calendar, fill_value=False).astype(int)
+                   for e in elig.values())
+        counts.append(pd.DataFrame({"book": book, "year": calendar.year, "gate": gate.values,
+                                    "eligible": full.values}))
+    c = pd.concat(counts)
+    return (c.groupby(["year", "book"])[["gate", "eligible"]].mean().round(1)
+            .unstack("book").swaplevel(axis=1).sort_index(axis=1))
