@@ -31,4 +31,20 @@ date,ticker,open,high,low,close,adj_close,volume
 2026-11-24,TSX:XYZ,10.02,10.31,9.95,10.20,10.20,412000
 ```
 
+**results/universe_v1.csv** (phase 1): one row per universe name.
+
+```csv
+yahoo,ticker,book,last_date,close,value_traded_20d,sessions,exchange,name
+RY.TO,TSX:RY,regular,2026-11-24,180.1200,950000000.0000,20,TSX,Royal Bank of Canada
+```
+
+**results/data_quality_flags_v1.csv** (phase 1): one row per flagged bar. `flag` is one of jump, gap_jump, zero_volume, bad_ohlc, split_unadjusted, possible_split, missing_day. Later phases must not trade on a flagged bar.
+
+```csv
+yahoo,date,flag,detail
+XYZ.V,2024-03-11,jump,close +52.0%
+```
+
+**results/data_quality_v1.md** (phase 1): coverage, missing days, zero-volume days, jumps over 40%, split checks and bad OHLC bars, by book, plus caveats.
+
 **results/backtest_v1.md** (on demand): one table per book with every metric from docs/rules.md, base and each variant as rows, in-sample and out-of-sample as columns, the random baseline and XIC on the last rows, then a short list of caveats. Plus results/trades_v1.csv with every simulated trade.
