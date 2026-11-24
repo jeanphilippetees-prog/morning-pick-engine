@@ -36,19 +36,30 @@ EXCHANGE_TO_SUFFIX = {v: k for k, v in SUFFIX_TO_EXCHANGE.items()}
 
 
 def to_output_ticker(yahoo: str) -> str:
-    """'XYZ.TO' -> 'TSX:XYZ', 'ABC.V' -> 'TSXV:ABC', 'Q.CN' -> 'CSE:Q'."""
+    """Yahoo symbol to the trade-log format used in every output file.
+
+    'XYZ.TO' -> 'TSX:XYZ', 'ABC.V' -> 'TSXV:ABC', 'Q.CN' -> 'CSE:Q'.
+    Share classes and units keep the TMX dot: 'CCL-B.TO' -> 'TSX:CCL.B',
+    'REI-UN.TO' -> 'TSX:REI.UN'.
+    """
     for suffix, exch in SUFFIX_TO_EXCHANGE.items():
         if yahoo.upper().endswith(suffix):
-            return f"{exch}:{yahoo[: -len(suffix)]}"
+            return f"{exch}:{yahoo[: -len(suffix)].replace('-', '.')}"
     raise ValueError(f"not a Canadian Yahoo symbol: {yahoo!r}")
 
 
 def to_yahoo(ticker: str) -> str:
-    """'TSX:XYZ' -> 'XYZ.TO'. Passes Yahoo symbols through unchanged."""
+    """'TSX:CCL.B' -> 'CCL-B.TO'. Passes Yahoo symbols through unchanged."""
     if ":" not in ticker:
         return ticker
     exch, sym = ticker.split(":", 1)
-    return sym + EXCHANGE_TO_SUFFIX[exch.upper()]
+    return sym.replace(".", "-") + EXCHANGE_TO_SUFFIX[exch.upper()]
+
+
+def security_type(yahoo: str) -> str:
+    """'unit' for REIT and trust units (.UN), else 'common'."""
+    base = yahoo.rsplit(".", 1)[0]
+    return "unit" if base.upper().endswith("-UN") else "common"
 
 
 def tmx_symbol_to_yahoo(symbol: str, exchange: str) -> str:
@@ -183,3 +194,40 @@ def update_cache(symbols: list[str], start: str, end: str | None = None,
             except Exception as exc:  # actions are a check, not a blocker
                 log.warning("actions failed for %s: %s", sym, exc)
     return failed
+
+
+# --- Manual corrections (docs/corrections.csv) --------------------------------
+#
+# ratio != 0 and != 1: a split Yahoo missed, in Yahoo's convention (new shares
+#   per old share; 0.1 = 1-for-10). Bars before `date` are divided by the ratio
+#   (prices) or multiplied by it (volume); dividends before it are divided too.
+# ratio == 1: a verified real move; nothing changes, and the quality check no
+#   longer treats that date's level shift as unresolved.
+# ratio == 0: an unconfirmed shift; every bar before `date` is dropped.
+
+CORRECTIONS = ROOT / "docs" / "corrections.csv"
+PRICE_ONLY = ["open", "high", "low", "close", "adj_close"]
+
+
+def load_corrections(path: Path = CORRECTIONS) -> pd.DataFrame:
+    c = pd.read_csv(path, parse_dates=["date"])
+    c["yahoo"] = c["ticker"].map(to_yahoo)
+    return c
+
+
+def apply_corrections(df: pd.DataFrame, actions: pd.DataFrame, rows: pd.DataFrame
+                      ) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Apply one ticker's correction rows, oldest first. Returns new copies."""
+    df, actions = df.copy(), actions.copy()
+    for _, r in rows.sort_values("date").iterrows():
+        before = df.index < r["date"]
+        if r["ratio"] == 0:
+            df = df.loc[~before]
+            actions = actions.loc[actions.index >= r["date"]]
+        elif r["ratio"] != 1:
+            df.loc[before, PRICE_ONLY] = df.loc[before, PRICE_ONLY] / r["ratio"]
+            df.loc[before, "volume"] = (df.loc[before, "volume"] * r["ratio"]).round().astype("int64")
+            if "dividends" in actions:
+                abefore = actions.index < r["date"]
+                actions.loc[abefore, "dividends"] = actions.loc[abefore, "dividends"] / r["ratio"]
+    return df, actions

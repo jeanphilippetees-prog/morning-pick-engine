@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 from engine import quality as q
 
@@ -87,3 +88,45 @@ def test_two_tick_flip_flop_is_bad_print_not_level_shift():
     closes = [0.6, 0.6, 0.3, 0.3, 0.3, 0.6, 0.6, 0.6, 0.6, 0.6]
     f = q.bar_flags(bars(closes))
     assert list(f.loc[f["flag"].isin(["bad_print", "level_shift"]), "flag"]) == ["bad_print", "bad_print"]
+
+
+def _corr(rows):
+    c = pd.DataFrame(rows, columns=["ticker", "date", "ratio", "reason", "source"])
+    c["date"] = pd.to_datetime(c["date"])
+    from engine import data
+    c["yahoo"] = c["ticker"].map(data.to_yahoo)
+    return c
+
+
+def test_reverse_split_correction_removes_the_jump(tmp_path):
+    from engine import data
+    closes = [1.47, 1.29, 1.15, 1.10, 10.78, 9.86, 10.05]
+    df = bars(closes)
+    data.save_cached("TLRY.TO", df, tmp_path)
+    corr = _corr([["TSX:TLRY", df.index[4].date().isoformat(), 0.1, "1-for-10", "8-K"]])
+    out, _, flags, dropped = q.clean_history("TLRY.TO", corr, tmp_path)
+    assert out["close"].iloc[3] == pytest.approx(11.0)  # 1.10 x 10
+    assert out["volume"].iloc[0] == 100                 # 1000 x 0.1
+    assert flags.empty and dropped is None
+
+
+def test_verified_real_move_is_kept_and_unverified_drops_history(tmp_path):
+    from engine import data
+    closes = [10.0, 10.1, 10.2, 10.0, 10.1, 4.8, 4.9, 5.0, 4.9, 5.0]
+    data.save_cached("CVE.TO", bars(closes), tmp_path)
+    data.save_cached("XX.TO", bars(closes), tmp_path)
+    d = bars(closes).index[5]
+    corr = _corr([["TSX:CVE", d.date().isoformat(), 1, "real crash", "news"]])
+    kept, _, flags, dropped = q.clean_history("CVE.TO", corr, tmp_path)
+    assert len(kept) == 10 and dropped is None and "level_shift" in set(flags["flag"])
+    cut, _, _, dropped = q.clean_history("XX.TO", corr, tmp_path)
+    assert dropped == d and cut.index[0] == d and len(cut) == 5
+
+
+def test_ratio_zero_drops_before_date(tmp_path):
+    from engine import data
+    df = bars([1, 1, 1, 1, 1.0])
+    data.save_cached("ATX.TO", df, tmp_path)
+    corr = _corr([["TSX:ATX", df.index[2].date().isoformat(), 0, "unconfirmed", ""]])
+    out, _, _, _ = q.clean_history("ATX.TO", corr, tmp_path)
+    assert out.index[0] == df.index[2]

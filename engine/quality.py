@@ -144,3 +144,38 @@ def ticker_summary(sym: str, df: pd.DataFrame, calendar: pd.DatetimeIndex,
 def flagged_bar_share(flags: pd.DataFrame, total_bars: int) -> float:
     real = flags[flags["flag"] != "missing_day"]
     return len(real.drop_duplicates(["yahoo", "date"])) / total_bars if total_bars else np.nan
+
+
+# Flags that block signals (60-session lookback) and are skipped inside a trade.
+# zero_volume and missing_day have their own rules.
+BLOCKING = {"jump", "gap_jump", "bad_ohlc", "bad_print", "split_unadjusted", "level_shift"}
+
+
+def clean_history(sym: str, corrections: pd.DataFrame | None = None, data_dir=None):
+    """Load one ticker, apply docs/corrections.csv, then drop history before any
+    level shift that is still unresolved (not verified in corrections.csv).
+
+    Returns (prices, actions, flags, dropped_before) where dropped_before is the
+    date the history now starts from because of an automatic drop, or None.
+    """
+    from engine import data
+
+    kw = {} if data_dir is None else {"data_dir": data_dir}
+    df = data.load_cached(sym, **kw)
+    acts = data.load_actions(sym, **kw)
+    if df is None:
+        return None, acts, pd.DataFrame(columns=["date", "flag", "detail"]), None
+    corr = data.load_corrections() if corrections is None else corrections
+    rows = corr[corr["yahoo"] == sym]
+    df, acts = data.apply_corrections(df, acts, rows)
+    verified = set(rows.loc[rows["ratio"] == 1, "date"])
+    dropped = None
+    for _ in range(3):  # a drop can expose nothing new, but stay bounded
+        flags = bar_flags(df, acts.get("splits"))
+        open_shifts = flags[(flags["flag"] == "level_shift") & ~flags["date"].isin(verified)]
+        if open_shifts.empty:
+            break
+        dropped = open_shifts["date"].max()
+        df = df.loc[df.index >= dropped]
+        acts = acts.loc[acts.index >= dropped]
+    return df, acts, flags, dropped
