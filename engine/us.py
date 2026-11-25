@@ -3,7 +3,8 @@
     python -m engine.us universe   # parse the saved constituent pages, write results/us_universe_v1.csv
     python -m engine.us download   # 10 years of prices and actions into data/us/ (git-ignored)
     python -m engine.us earnings   # earnings dates into data/us/earnings/
-    python -m engine.us run        # clean, eligibility, outcomes, books, report
+    python -m engine.us prepare    # clean, eligibility, outcome table (no earnings needed)
+    python -m engine.us run        # earnings tags, books, event averages, report
 
 Same engine and rules as the Canadian study; only the universe, the gate
 ($5, $20M USD a day), the benchmark (SPY) and the costs differ.
@@ -69,6 +70,10 @@ def main() -> None:
         counts = earnings.fetch(u["yahoo"].tolist(), directory=US_DIR / "earnings")
         print("DONE", len(counts), "names,", sum(1 for v in counts.values() if v), "with dates,",
               sum(counts.values()), "dates")
+    elif cmd == "prepare":
+        from engine import us_study
+        us_study.prepare()
+        print("DONE prepare")
     elif cmd == "run":
         from engine import us_study
         us_study.run()

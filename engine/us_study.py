@@ -319,11 +319,38 @@ def write_report(cl, results, trades, yearly, cands, stats, avg, fwd) -> str:
     return text
 
 
-def run() -> None:
+def prepare() -> None:
+    """Stage 1 (no earnings needed): clean, eligibility and the outcome table."""
     logging.info("cleaning")
-    cl = clean_all()
+    clean_all()
     logging.info("outcomes")
-    gross = bt.build_outcomes(bt.V2, US, row_filter)
+    bt.build_outcomes(bt.V2, US, row_filter)
+
+
+def _reload_clean() -> dict:
+    u = pd.read_csv(UNIVERSE_FILE)
+    flags = pd.read_parquet(CLEAN / "flags.parquet")
+    elig = pd.read_parquet(CLEAN / "eligibility.parquet")
+    have = {p.stem for p in (CLEAN / "prices").glob("*.parquet")}
+    corr = data.load_corrections()
+    dropped = []
+    for sym in u["yahoo"]:
+        if sym in have:
+            raw = data.load_cached(sym, US_DIR)
+            cleaned = pd.read_parquet(CLEAN / "prices" / f"{sym}.parquet", columns=["close"])
+            rows = corr[corr["yahoo"] == sym]
+            if raw is not None and cleaned.index[0] > raw.index[0] and not (rows["ratio"] == 0).any():
+                dropped.append({"yahoo": sym, "starts": cleaned.index[0]})
+    return {"names": len(u), "missing": sorted(set(u["yahoo"]) - have), "dropped": pd.DataFrame(dropped),
+            "flags": flags, "elig": elig}
+
+
+def run() -> None:
+    """Stage 2: earnings tags, books, event averages, forward returns, report."""
+    if not bt.outcomes_path(bt.V2, US).exists():
+        prepare()
+    cl = _reload_clean()
+    gross = pd.read_parquet(bt.outcomes_path(bt.V2, US))
     spy, _ = bt._load_clean(BENCHMARK, US)
     gross, stats = news.tag_earnings(gross, spy.index, EARN_DIR)
     cands = scenario_cands(gross)
