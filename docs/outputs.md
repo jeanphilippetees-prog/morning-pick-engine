@@ -76,3 +76,16 @@ main,3,Yes,base,OOS,TSX:XYZ,common,regular,2024-03-08,2024-03-11,2024-03-15,3,1,
 **results/backtest_v2.md** and **results/trades_v2.csv** (phase 2, v2 after the PM review): same layout as v1, plus a section on what each correction changed (blocking flags, $1,000 main account with skips for price and cash, small-cap strict fill). Books: main, shadow, smallcap, smallcap_strict. trades_v2.csv has the trades_v1.csv columns plus `setup`, `strict` and the event inputs `ret_1d`, `vol_ratio`, `gap_1d`, `ret_20d_prior`.
 
 **results/news_proxy_v1.md** and **results/news_trades_v1.csv** (phase 2b): news-proxy events (`event` column: news4, news6, news4 gap, news4 intraday, news4 reversal, news4 continuation, news4 earnings, news4 non-earnings), same books and metrics as backtest v2, a trade-level event study with no slot limit, the earnings-vs-non-earnings comparison, earnings-date coverage, by year and caveats. news_trades_v1.csv has the trades_v2.csv columns plus `event` and `earnings`.
+
+**results/systematic_v1.md** (systematic study, docs/strategies.md): summary first (pass/fail of primary D against the pre-registered bar), then one row per strategy with CAGR, Sharpe, max drawdown, worst month, % months invested, annual turnover and trades per year, in-sample / out-of-sample, vs XIC and vs the 200-run random baseline; yearly returns; the $1,000 whole-share check and the historical replay to $10,000; data notes.
+
+**results/systematic_holdings_v1.csv** (systematic study): one row per strategy and signal month.
+
+```csv
+month,strategy,holdings,weights
+2025-10,D primary,TSXV:UCU;TSX:DSV;...,0.1000;0.1000;...
+```
+
+`month` is the signal month-end (trades at the next session's open); `holdings` and `weights` are semicolon lists in the same order; `CASH` with weight 1.0000 when the book is out of the market.
+
+**results/data_scoping_2c.md** (scoping only): data sources for historical TSX earnings dates and surprises and for SEDI insider filings, with coverage, history, access and terms on automated access. Nothing scraped.
