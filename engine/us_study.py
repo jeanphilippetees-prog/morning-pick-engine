@@ -26,7 +26,7 @@ import numpy as np
 import pandas as pd
 
 from engine import backtest as bt, data, earnings, news, quality, universe
-from engine.report_backtest import (MIN_TRADES, by_year, fmt, full_tables, matrix, summary_lines, table,
+from engine.report_backtest import (MIN_TRADES, by_year, config_name, fmt, full_tables, matrix, summary_lines, table,
                                     tail_sections, wide, write_trades)
 from engine.us import BENCHMARK, RESULTS, UNIVERSE_FILE, US_DIR
 
@@ -279,6 +279,26 @@ def write_report(cl, results, trades, yearly, cands, stats, avg, fwd) -> str:
     for uni, lab in SCENARIOS:
         out += [f"### {lab}", "", *summary_lines(w[w["book"].isin([b.name for b in BOOKS if b.universe == uni])],
                                                 f"shadow book x 3 event setups x 6 exits", bench="SPY")]
+    edge = w[w["edge_OOS"]]
+    if len(edge):
+        rob = []
+        for _, r in edge.iterrows():
+            tr = t_out[(t_out["book"] == r["book"]) & (t_out["event"] == r["setup"]) & (t_out["variant"] == r["variant"])
+                       & (t_out["period"] == "OOS")]["net"].sort_values(ascending=False)
+            uni = next(b.universe for b in BOOKS if b.name == r["book"])
+            ua = avg[(avg["universe"] == uni) & (avg["variant"] == r["variant"])].set_index(["group", "period"])
+            rob.append([config_name(r), fmt(tr.mean(), "pct2"), fmt(tr.iloc[5:].mean(), "pct2"),
+                        fmt(tr.iloc[10:].mean(), "pct2"), fmt(r["rand_p95_OOS"], "pct2"),
+                        f"{fmt(ua.at[(r['setup'], 'IS'), 'expectancy'], 'pct2')} / "
+                        f"{fmt(ua.at[(r['setup'], 'OOS'), 'expectancy'], 'pct2')}",
+                        f"{fmt(ua.at[('all candidates (sample)', 'IS'), 'expectancy'], 'pct2')} / "
+                        f"{fmt(ua.at[('all candidates (sample)', 'OOS'), 'expectancy'], 'pct2')}"])
+        out += ["### Robustness of configurations that clear the bar", "",
+                f"{len(w)} configurations were tested, so about {0.05 * len(w):.0f} would clear the random 95th "
+                "percentile by chance alone. Checks: the OOS mean without the best 5 and 10 trades, and the same "
+                "event and exit with no slot limit (IS / OOS) next to a random entry.", "",
+                table(["Config", "OOS net exp.", "Without top 5", "Without top 10", "Random p95",
+                       "Unlimited event IS / OOS", "Unlimited random IS / OOS"], rob)]
     out += ["## Unlimited event average (every event, no slots)", "",
             "Each cell: filled trades / mean net return per trade (± 95% interval) / win rate. 'All candidates' is "
             "the uniform sample of every eligible name-day: what a random entry earns on average.", ""]
